@@ -1,5 +1,5 @@
 // S-92 FCP – offline cache. Viser lagret versjon straks og henter ny i bakgrunnen.
-const VERSION = "20261008202857";
+const VERSION = "20261008203258";
 const CACHE = "fcp-" + VERSION;
 const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
   "figures/fig1.png", "figures/fig2.png", "figures/fig3.png", "figures/fig4.png"];
