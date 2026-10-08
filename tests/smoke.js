@@ -54,7 +54,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('#row-1\\.1 .sign');
   ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('Performed'), '1.1 performed with one tap');
   const deco = await pg.$eval('#row-1\\.1 .go .t', e => getComputedStyle(e).textDecorationLine);
-  const op = await pg.$eval('#row-1\\.1 .go', e => +getComputedStyle(e).opacity);
+  const op = await pg.$eval('#row-1\\.1', e => +getComputedStyle(e).opacity);
   ok(deco.includes('line-through') && op < 1, 'Performed task is struck through with reduced opacity');
   ok(!(await pg.$eval('#row-1\\.2 .go .t', e => getComputedStyle(e).textDecorationLine)).includes('line-through'), 'Not performed task is not struck through');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-performed.png' });
@@ -109,6 +109,20 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('#backBtn');
   await pg.waitForFunction(() => !document.getElementById('home').hidden);
   ok(await pg.isVisible('#row-3\\.1'), 'Back from 3.1 expands 3.0');
+
+  // Not-selected test: no Selected toggle, grey Performed asks to add to Selected
+  await pg.goto(URL + '#/1.7');
+  await pg.waitForSelector('#signCard .bigsign');
+  ok(await pg.locator('#secSel').count() === 0, 'No "Selected for this FCP" toggle');
+  ok(await pg.locator('#signCard .bigsign.off').count() === 1, 'Performed greyed out when not selected');
+  await pg.click('#signCard .bigsign');
+  ok(await pg.isVisible('#signModal') && (await pg.textContent('#smBody')).includes('Add it to Selected'), 'Tap asks to add to Selected');
+  await pg.click('#smBtns .primary');
+  ok(await pg.evaluate(() => { const o = JSON.parse(localStorage.getItem('fcp-v1')); return o.sel['1.7'] && !o.done['1.7']; }), '1.7 added to Selected, not performed yet');
+  ok(await pg.locator('#signCard .bigsign.off').count() === 0, 'Performed active after adding');
+  await pg.click('#signCard .bigsign');
+  ok((await pg.textContent('#signCard')).includes('✓ Performed'), '1.7 performed');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/sec-1.7.png' });
 
   // 4.2 has record fields + figures
   await pg.goto(URL + '#/4.2');
