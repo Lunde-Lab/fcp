@@ -45,28 +45,21 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('button[data-tog="3"]');
   ok(!(await pg.isVisible('#row-3\\.1')), 'Tapping again collapses it');
 
-  // Select tests; first Performed without technician asks for initials
+  // Select tests; Performed signs with one tap, row gets struck through
   await pg.click('#row-1\\.1 .chk');
   await pg.click('#row-1\\.2 .chk');
   ok((await pg.textContent('#fSel')).includes('2'), '2 tests selected');
+  ok(await pg.locator('#techAdd').count() === 0, 'Technician section removed');
   ok((await pg.textContent('#row-1\\.1 .sign')) === 'Performed', 'Button is named Performed');
   await pg.click('#row-1\\.1 .sign');
-  ok(await pg.isVisible('#signModal'), 'No technician yet: add-technician modal opens');
-  await pg.fill('#smWho', 'al');
-  await pg.click('#smBtns .primary');
-  ok((await pg.textContent('#row-1\\.1 .signed')).includes('AL'), '1.1 signed by AL');
-  // Second technician, one tap to sign
-  await pg.click('#techAdd'); await pg.fill('#smWho', 'kb'); await pg.click('#smBtns .primary');
-  ok((await pg.textContent('.tchip[aria-checked="true"]')) === 'KB', 'KB added and active');
-  await pg.click('.tchip[data-tech="AL"]');
-  ok((await pg.textContent('.tchip[aria-checked="true"]')) === 'AL', 'Tap AL makes AL active');
-  await pg.click('.tchip[data-tech="KB"]');
-  await pg.click('#row-1\\.2 .sign');
-  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.2 .signed')).includes('KB'), '1.2 signed by KB with one tap');
-  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-techs.png' });
+  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('Performed'), '1.1 performed with one tap');
+  const deco = await pg.$eval('#row-1\\.1 .go .t', e => getComputedStyle(e).textDecorationLine);
+  const op = await pg.$eval('#row-1\\.1 .go', e => +getComputedStyle(e).opacity);
+  ok(deco.includes('line-through') && op < 1, 'Performed task is struck through with reduced opacity');
+  ok(!(await pg.$eval('#row-1\\.2 .go .t', e => getComputedStyle(e).textDecorationLine)).includes('line-through'), 'Not performed task is not struck through');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-performed.png' });
   const st = await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')));
-  ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].by === 'AL' && st.done['1.2'].by === 'KB', 'State saved');
-  await pg.click('#row-1\\.2 .signed'); await pg.click('#smBtns .danger');
+  ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].at && !st.done['1.2'], 'State saved');
 
   // Filter Selected
   await pg.click('#fSel');
@@ -76,15 +69,34 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   // Sign from section page with one tap
   await pg.click('#row-1\\.2 .go');
   await pg.waitForSelector('#signCard .bigsign');
-  ok((await pg.textContent('#signCard .bigsign')).includes('KB'), 'Section Performed button shows active technician');
   await pg.click('#signCard .bigsign');
-  ok((await pg.textContent('#signCard')).includes('✓ Performed') && (await pg.textContent('#signCard')).includes('KB'), 'Section page signed by KB');
+  ok((await pg.textContent('#signCard')).includes('✓ Performed'), 'Section page Performed with one tap');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/sec-1.2-signed.png' });
 
   // Undo sign-off
   await pg.click('#signCard button[data-sign]');
   await pg.click('#smBtns .danger');
   ok(!(await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')).done['1.2'])), 'Sign-off removed');
+
+  // New job: modal to pick tests, then only those are shown
+  await pg.goto(URL + '#/');
+  await pg.click('#newJobBtn');
+  ok(await pg.isVisible('#jobModal'), 'New job opens task picker');
+  ok((await pg.textContent('#jobInfo')).includes('clears'), 'Warns that current job is cleared');
+  ok(await pg.isDisabled('#jobStart'), 'Start disabled with nothing picked');
+  await pg.click('.jrow[data-jid="1.4"]'); await pg.click('.jrow[data-jid="3.2"]'); await pg.click('.jrow[data-jid="5.1"]');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/newjob.png' });
+  await pg.click('#jobStart');
+  ok(!(await pg.isVisible('#jobModal')), 'Start job closes modal');
+  ok(await pg.locator('.row:visible').count() === 3, 'Only the 3 picked tests are shown (3.0 opened)');
+  const st2 = await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')));
+  ok(Object.keys(st2.done).length === 0 && Object.keys(st2.sel).join() === '1.4,3.2,5.1', 'Old job cleared, new selection saved');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/newjob-home.png' });
+  await pg.click('#fAll');
+  ok(await pg.locator('.row:visible').count() === 98 - 7, 'All shows every test to add more (4.0 still collapsed)');
+  await pg.click('#row-1\\.5 .chk');
+  await pg.click('#fSel');
+  ok(await pg.locator('.row:visible').count() === 4, 'Added test shows under Selected');
 
   // Returning from a section in a collapsed chapter opens that chapter
   await pg.goto(URL + '#/');
