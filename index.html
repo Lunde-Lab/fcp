@@ -128,7 +128,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 .foot button { min-height: 44px; padding: 6px 16px; font-size: .9rem; }
 
 /* Prosedyreside */
-.doc { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 12px; font-size: 1.05rem; line-height: 1.5; }
+.doc { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 12px; font-size: 1.15rem; line-height: 1.55; }
 .doc .ch { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; margin: 0; }
 .doc h1 { display: flex; gap: 12px; align-items: baseline; font-size: 1.5rem; }
 .doc h1 span { font-family: var(--font-data); color: var(--accent); }
@@ -137,6 +137,23 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 .step { display: grid; grid-template-columns: 2.2em minmax(0, 1fr); gap: 0 4px; margin-left: calc((var(--l, 1) - 1) * 2.2em); }
 .step > b { font-family: var(--font-data); font-weight: 700; color: var(--muted); font-size: .95em; text-align: right; padding-right: 6px; }
 .step.l1 > b { color: var(--fg); }
+.step.sep { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 4px; }
+/* Kontrollsteg (a., b. …) samlet med strek til venstre */
+.subs { margin-left: 2.2em; padding-left: 8px; border-left: 3px solid rgba(var(--accent-rgb), .35); display: flex; flex-direction: column; gap: 10px; }
+.subs .step { margin-left: calc((var(--l, 2) - 2) * 2.2em); }
+/* Lesbarhet: brytere/knapper, verdier, menystier */
+.k { font-family: var(--font-data); font-weight: 700; font-size: .86em; letter-spacing: -.01em; }
+.v { font-weight: 700; color: var(--fg); white-space: nowrap; }
+.path { display: inline; }
+.path span { display: inline-block; font-family: var(--font-data); font-weight: 700; font-size: .8em; line-height: 1.3; padding: 2px 8px; margin: 1px 0; border-radius: 6px; background: rgba(var(--accent-rgb), .12); border: 1px solid rgba(var(--accent-rgb), .35); color: var(--fg); white-space: nowrap; }
+.path i { font-style: normal; color: var(--accent); font-weight: 700; padding: 0 3px; }
+details.notes summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; min-height: 32px; -webkit-tap-highlight-color: transparent; }
+details.notes summary::-webkit-details-marker { display: none; }
+details.notes summary span { font-size: .85rem; color: var(--muted); }
+details.notes summary::after { content: "›"; margin-left: auto; font-size: 1.4rem; line-height: 1; color: var(--accent); transition: transform .2s; }
+details.notes[open] summary::after { transform: rotate(90deg); }
+details.notes[open] summary span { display: none; }
+details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(var(--cr), .3); }
 .para { margin: 0; }
 .para.ann { font-family: var(--font-data); font-size: .92em; font-weight: 500; }
 .adm { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px 12px 16px; border-radius: 12px; border: 1px solid rgba(var(--cr), .5); background: rgba(var(--cr), .1); border-left: 6px solid var(--c); }
@@ -405,20 +422,62 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 
   // ---------- section page ----------
   var ANN = /^[A-Z0-9 #/().,–\-]+$/;
+  // Lesbarhet uten å endre teksten: menystier som brikker, verdier fete, BRYTERE/KNAPPER i mono
+  var SEG = "(?:[A-Z0-9][A-Z0-9/#&-]*(?: [A-Z0-9][A-Z0-9/#&-]*)*|[A-Z][a-z]+)";
+  var UNITS = "%|°C|°F|°|IPS|KIAS|knots?|kts|seconds?|minutes?|feet|ft|fpm|psi|nm|NM|miles|KGS|mm|lbs?";
+  var FMT = new RegExp(
+    "(\\b" + SEG + "(?: ?→ ?" + SEG + ")+)" +                                         // 1: HLTH→HUMS→…
+    "|((?:±)?(?:\\d+(?:,\\d{3})*(?:\\.\\d+)?|\\.\\d+) ?(?:" + UNITS + ")(?![A-Za-z]))" + // 2: 105%, 0.2 IPS, 30 seconds
+    "|(\\b(?:NO\\. ?\\d{1,2}|[A-Z][A-Z0-9/#&+-]*[A-Z0-9])(?:(?: – | )(?:[A-Z][A-Z0-9/#&+-]*[A-Z0-9]|\\d{1,2}\\b))*)", "g"); // 3: BATT – OFF
   function lineHtml(t) {
-    return esc(t).replace(/→/g, '<span aria-label="then"> → </span>');
+    var out = "", last = 0, m;
+    FMT.lastIndex = 0;
+    while ((m = FMT.exec(t))) {
+      out += esc(t.slice(last, m.index));
+      if (m[1]) out += '<span class="path">' + m[1].split(/ ?→ ?/).map(function (x) { return "<span>" + esc(x) + "</span>"; }).join('<i aria-label="then">›</i>') + "</span>";
+      else if (m[2]) out += '<b class="v">' + esc(m[2]) + "</b>";
+      else out += '<b class="k">' + esc(m[3]) + "</b>";
+      last = FMT.lastIndex;
+    }
+    return out + esc(t.slice(last));
   }
-  function blockHtml(b) {
+  // Samler kontrollsteg (lvl ≥ 2) i .subs, skillelinje mellom hovedsteg, flere NOTE-er etter hverandre i én lukket boks
+  function docHtml(blocks) {
+    var out = "", i = 0, inSub = false, first = true;
+    function closeSub() { if (inSub) { out += "</div>"; inSub = false; } }
+    while (i < blocks.length) {
+      var b = blocks[i];
+      if (b.t === "note" && blocks[i + 1] && blocks[i + 1].t === "note") {
+        var j = i; while (blocks[j] && blocks[j].t === "note") j++;
+        closeSub();
+        out += '<details class="adm note notes"><summary><b>NOTES</b><span>' + (j - i) + ' notes – tap to show</span></summary>' +
+          blocks.slice(i, j).map(function (n) { return "<p>" + lineHtml(n.text) + "</p>"; }).join("") + "</details>";
+        i = j; continue;
+      }
+      var sub = (b.t === "step" && b.lvl >= 2) || (b.t === "p" && (b.lvl || 0) >= 2) || (b.t === "table" && inSub);
+      if (sub && !inSub) { out += '<div class="subs">'; inSub = true; }
+      if (!sub) closeSub();
+      if (b.t === "h") first = true;
+      var sep = false;
+      if (b.t === "step" && b.lvl === 1) { sep = !first; first = false; }
+      out += blockHtml(b, sep, inSub);
+      i++;
+    }
+    closeSub();
+    return out;
+  }
+  function blockHtml(b, sep, inSub) {
     switch (b.t) {
       case "warning": case "caution": case "note":
         return '<div class="adm ' + b.t + '"><b>' + b.t.toUpperCase() + '</b><p>' + lineHtml(b.text) + '</p></div>';
       case "h":
         return '<h3><span>' + esc(b.id) + '</span>' + esc(b.text) + '</h3>';
       case "step":
-        return '<div class="step l' + b.lvl + '" style="--l:' + b.lvl + '"><b>' + esc(b.lvl <= 2 ? b.n + "." : "(" + b.n + ")") + '</b><div>' + lineHtml(b.text) + '</div></div>';
+        return '<div class="step l' + b.lvl + (sep ? " sep" : "") + '" style="--l:' + b.lvl + '"><b>' + esc(b.lvl <= 2 ? b.n + "." : "(" + b.n + ")") + '</b><div>' + lineHtml(b.text) + '</div></div>';
       case "p":
         var l = b.lvl || 0, ann = ANN.test(b.text.replace(/\(.*?\)/g, "")) && b.text.length < 60;
-        return '<p class="para' + (ann ? " ann" : "") + '" style="margin-left:' + (l * 2.2 + (l ? 0.3 : 0)) + 'em">' + lineHtml(b.text) + '</p>';
+        var ml = l ? (l - (inSub ? 2 : 1)) * 2.2 + 2.5 : 0;
+        return '<p class="para' + (ann ? " ann" : "") + '" style="margin-left:' + ml + 'em">' + (ann ? esc(b.text) : lineHtml(b.text)) + '</p>';
       case "table":
         // header row: empty corner cell above a filled first column (limit tables), or "Channel"
         var rest = b.rows.slice(1);
@@ -442,7 +501,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
     var s = SEC[id], c = CHAP[s.chapter], html = "";
     html += '<p class="ch">' + c.id + '.0 ' + esc(c.title) + '</p>';
     html += '<h1><span>' + s.id + '</span>' + esc(s.title) + '</h1>';
-    s.blocks.forEach(function (b) { html += blockHtml(b); });
+    html += docHtml(s.blocks);
     if (id === "4.2") {
       html += '<h3><span>FIG</span>Figures</h3><div class="figs">' + D.figures.map(function (f) {
         return '<figure class="fig" id="fig' + f.n + '"><img src="' + f.src + '" alt="Figure ' + f.n + '. ' + esc(f.title) + '" loading="lazy"><figcaption>Figure ' + f.n + '. ' + esc(f.title) + '</figcaption></figure>';
