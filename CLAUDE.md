@@ -18,12 +18,12 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 - Filter **All / Selected**; with Selected active, prev/next steps through selected tests only.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
 - **New job** (top bar): modal listing all tests with per-chapter Select all; **Start job** clears the previous job (selections, sign-offs, records), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
-- **Share summary** (iOS share sheet / clipboard).
 - **Readability (display only, text stays verbatim):** `lineHtml()` shows menu paths (`HLTH→HUMS→…`) as chips, values with units (`105%`, `0.2 IPS`, `30 seconds`, `±1%`) bold, and ALL-CAPS switch/button names (`BATT – ON`, `EMER PWR`) bold mono. `docHtml()` groups sub-steps (a., b. …) under a left line, puts a divider between main steps, and folds 2+ consecutive NOTEs into one collapsed "NOTES (n)" box. WARNING/CAUTION are always shown. Procedure text is 1.15rem.
 
 ## Behaviour André has decided (don't undo without asking)
 
 - No selected/performed/remaining counter card on the front page (removed on request).
+- No export/Share summary (removed on request).
 - No technician/initials – the button is just **Performed** (one tap). Performed tasks are struck through and the whole row (incl. background and Performed button) has reduced opacity.
 - **Selected** view has no checkboxes (deselect only from All). No bar title/progress text ("S-92A FCP / x of y performed") and no disclaimer line on the front page.
 - A new job starts by picking tests in the New job modal; after that only the selected tests are shown (All/Selected segmented control to add more).

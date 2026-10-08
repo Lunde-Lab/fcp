@@ -262,7 +262,6 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
       <div id="chapters" class="wrap"></div>
       <div class="foot">
         <div class="btns">
-          <button type="button" id="shareBtn">Share summary</button>
           <button type="button" id="themeBtn">Light mode</button>
         </div>
       </div>
@@ -676,26 +675,6 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
     $("jobModal").hidden = true; lastSec = null;
     setFilter(true);
     toast("New job – " + Object.keys(pick).length + " tests");
-  });
-  function summaryText() {
-    var L = ["S-92A FCP – " + fmtDate(new Date().toISOString()), ""];
-    D.index.forEach(function (c) {
-      var its = c.items.filter(function (it) { return S.sel[it.id]; });
-      if (!its.length) return;
-      L.push(c.id + ".0 " + c.title);
-      its.forEach(function (it) {
-        var d = S.done[it.id];
-        L.push("  " + it.id + " " + it.title + " – " + (d ? "PERFORMED " + fmtDate(d.at) + " " + fmtTime(d.at) : "NOT PERFORMED"));
-        if (it.id === "4.2" && recSummary()) L.push("      " + recSummary());
-      });
-    });
-    if (L.length === 2) L.push("No tests selected.");
-    return L.join("\n");
-  }
-  $("shareBtn").addEventListener("click", function () {
-    var t = summaryText();
-    if (navigator.share) { navigator.share({ title: "S-92A FCP", text: t }).catch(function () {}); return; }
-    if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { toast("Summary copied"); }, function () { toast("Copy failed"); });
   });
 
   // ---------- theme (som ground-run) ----------

@@ -7,6 +7,6 @@ Interactive S-92A Flight Check Procedures checklist (SA S92A-FCP-000, rev. Octob
 - Each procedure has a **FCP** back button (always at the top). Chapters 3.0 and 4.0 start collapsed – tap a chapter header to open/close.
 - **Selected** filter shows only the chosen tests; prev/next then steps through those.
 - Works offline after first load (service worker). On iPad: Safari → Share → **Add to Home Screen**.
-- Data is stored only on the device. **Share summary** sends a text list of performed tests.
+- Data is stored only on the device.
 
 > Not verified. Support tool only. Always follow the current FCP and AMM.
