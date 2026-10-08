@@ -196,6 +196,28 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 .fld input.bad { border-color: var(--crit); }
 .sheet .btns { justify-content: flex-end; }
 .sheet .btns button { min-width: 110px; }
+/* Ny jobb: velg tester */
+.sheet.job { width: min(720px, 100%); max-height: 88vh; padding: 0; gap: 0; overflow: hidden; }
+.job-h { padding: 16px 18px 12px; display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid var(--line); }
+.job-h p { font-size: .9rem; color: var(--muted); }
+.job-h p.warnline { color: var(--warn); font-weight: 600; }
+.job-list { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
+.job-ch { display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 16px; background: var(--panel2); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 1; }
+.job-ch b { flex: 1; font-size: .95rem; }
+.job-ch b span { font-family: var(--font-data); color: var(--accent); margin-right: 8px; }
+.job-ch button { min-height: 40px; padding: 4px 12px; font-size: .85rem; }
+.jrow { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 4px 12px 4px 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; text-align: left; }
+.jrow i { flex: none; width: 28px; height: 28px; border-radius: 8px; border: 2px solid var(--grid-strong); display: grid; place-items: center; }
+.jrow i svg { width: 18px; height: 18px; opacity: 0; stroke: var(--bg); }
+.jrow[aria-checked="true"] i { background: var(--accent); border-color: var(--accent); }
+.jrow[aria-checked="true"] i svg { opacity: 1; }
+.jrow .n { font-family: var(--font-data); font-weight: 700; color: var(--accent); min-width: 44px; }
+.jrow .t { font-weight: 600; font-size: .98rem; }
+.job-f { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 18px; padding-bottom: max(12px, env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); }
+.job-f .cnt { margin-right: auto; font-family: var(--font-data); color: var(--muted); }
+.job-f button { min-width: 120px; }
+.newjob { min-height: 46px; padding: 8px 16px; flex: none; }
+@media (max-width: 560px) { #barHome .bar-t { display: none; } #barHome .seg button { padding-inline: 10px; } }
 .toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 70; padding: 12px 18px; border-radius: 12px; background: var(--fg); color: var(--bg); font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
 </style>
 </head>
@@ -208,6 +230,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
       <button type="button" id="fAll" aria-pressed="true">All</button>
       <button type="button" id="fSel" aria-pressed="false">Selected</button>
     </div>
+    <button type="button" class="primary newjob" id="newJobBtn">New job</button>
   </div>
   <div class="bar-in" id="barSec" hidden>
     <button type="button" class="back" id="backBtn" aria-label="Back to front page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>FCP</button>
@@ -233,7 +256,6 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
       <div class="foot">
         <div class="btns">
           <button type="button" id="shareBtn">Share summary</button>
-          <button type="button" id="resetBtn">New FCP</button>
           <button type="button" id="themeBtn">Light mode</button>
         </div>
         <p class="fine">Not verified. Support tool only – always follow the current FCP and AMM. Data is stored on this device only.</p>
@@ -257,6 +279,14 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
     <div id="smBody"></div>
     <div class="btns" id="smBtns"></div>
   </form>
+</div>
+
+<div class="modal" id="jobModal" role="dialog" aria-modal="true" aria-labelledby="jobTitle" hidden>
+  <div class="sheet job">
+    <div class="job-h"><h3 id="jobTitle">New job – select tests</h3><p id="jobInfo"></p></div>
+    <div class="job-list" id="jobList"></div>
+    <div class="job-f"><span class="cnt" id="jobCnt"></span><button type="button" id="jobCancel">Cancel</button><button type="button" class="primary" id="jobStart">Start job</button></div>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" hidden></div>
@@ -361,7 +391,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
       });
       html += "</div></section>";
     });
-    if (!html) html = '<div class="card empty">No tests selected. Switch to <b>All</b> and tick the tests to perform.</div>';
+    if (!html) html = '<div class="card empty">No tests selected. Tap <b>New job</b> to choose the tests, or switch to <b>All</b> and tick them.</div>';
     $("chapters").innerHTML = html;
     renderSummary();
   }
@@ -547,7 +577,10 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   });
   $("smBtns").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b && b.dataset.act === "cancel") closeModal(); });
   $("signModal").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("signModal").hidden) closeModal(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (!$("signModal").hidden) closeModal(); else $("jobModal").hidden = true;
+  });
 
   // ---------- routing ----------
   // fromHome: the history entry before this section is the front page, so Back can use history.back()
@@ -589,10 +622,51 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   function refresh() { if (cur) { renderSignParts(cur); } else renderHome(); renderSummary(); }
 
   // ---------- footer actions ----------
-  $("resetBtn").addEventListener("click", function () {
-    openModal("New FCP", "<p>Clear all selections, sign-offs and recorded values on this device?</p>",
-      '<button type="button" data-act="cancel">Cancel</button><button type="submit" class="danger">Clear all</button>',
-      function () { S = tidy({}); save(); lastSec = null; renderHome(); window.scrollTo(0, 0); });
+  // New job: pick the tests in a modal; Start clears the old job and shows only the chosen tests
+  var pick = {};
+  function renderJob() {
+    $("jobList").innerHTML = D.index.map(function (c) {
+      var all = c.items.every(function (it) { return pick[it.id]; });
+      return '<div class="job-ch"><b><span>' + c.id + '.0</span>' + esc(c.title) + '</b><button type="button" data-jchap="' + c.id + '">' + (all ? "Clear" : "Select all") + '</button></div>' +
+        c.items.map(function (it) {
+          return '<button type="button" class="jrow" role="checkbox" aria-checked="' + !!pick[it.id] + '" data-jid="' + it.id + '"><i>' + CHECK + '</i><span class="n">' + it.id + '</span><span class="t">' + esc(it.title) + '</span></button>';
+        }).join("");
+    }).join("");
+    var n = Object.keys(pick).length;
+    $("jobCnt").textContent = n + " selected";
+    $("jobStart").disabled = !n;
+  }
+  function openJob() {
+    pick = {};
+    var nDone = Object.keys(S.done).length;
+    $("jobInfo").textContent = nDone ? "Starting a new job clears the current job (" + nDone + " sign-off" + (nDone > 1 ? "s" : "") + ")." : "Tick the tests to perform on this job.";
+    $("jobInfo").className = nDone ? "warnline" : "";
+    renderJob();
+    $("jobModal").hidden = false;
+    $("jobList").scrollTop = 0;
+  }
+  $("newJobBtn").addEventListener("click", openJob);
+  $("jobList").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    var top = $("jobList").scrollTop;
+    if (b.dataset.jid) { if (pick[b.dataset.jid]) delete pick[b.dataset.jid]; else pick[b.dataset.jid] = true; }
+    else if (b.dataset.jchap) {
+      var c = CHAP[b.dataset.jchap], all = c.items.every(function (it) { return pick[it.id]; });
+      c.items.forEach(function (it) { if (all) delete pick[it.id]; else pick[it.id] = true; });
+    }
+    renderJob(); $("jobList").scrollTop = top;
+  });
+  $("jobCancel").addEventListener("click", function () { $("jobModal").hidden = true; });
+  $("jobModal").addEventListener("click", function (e) { if (e.target === this) this.hidden = true; });
+  $("jobStart").addEventListener("click", function () {
+    S = tidy({}); S.sel = pick; save();
+    // 3.0/4.0 stay collapsed unless the job has tests in them
+    COL = { "3": true, "4": true };
+    Object.keys(pick).forEach(function (id) { delete COL[SEC[id].chapter]; });
+    saveCol();
+    $("jobModal").hidden = true; lastSec = null;
+    setFilter(true);
+    toast("New job – " + Object.keys(pick).length + " tests");
   });
   function summaryText() {
     var L = ["S-92A FCP – " + fmtDate(new Date().toISOString()), ""];

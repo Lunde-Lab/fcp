@@ -18,12 +18,14 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 - **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next, sign status. Bottom: selected toggle, **Performed** (shows active technician), prev/next.
 - Filter **All / Selected**; with Selected active, prev/next steps through selected tests only.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
-- **Share summary** (iOS share sheet / clipboard), **New FCP** clears everything.
+- **New job** (top bar): modal listing all tests with per-chapter Select all; **Start job** clears the previous job (selections, sign-offs, records – technicians are kept), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
+- **Share summary** (iOS share sheet / clipboard).
 
 ## Behaviour André has decided (don't undo without asking)
 
 - No selected/performed/remaining counter card on the front page (removed on request).
 - The sign button is called **Performed** and signs with one tap using the active technician.
+- A new job starts by picking tests in the New job modal; after that only the selected tests are shown (All/Selected segmented control to add more).
 
 ## Files
 

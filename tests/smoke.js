@@ -86,6 +86,26 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('#smBtns .danger');
   ok(!(await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')).done['1.2'])), 'Sign-off removed');
 
+  // New job: modal to pick tests, then only those are shown
+  await pg.goto(URL + '#/');
+  await pg.click('#newJobBtn');
+  ok(await pg.isVisible('#jobModal'), 'New job opens task picker');
+  ok((await pg.textContent('#jobInfo')).includes('clears'), 'Warns that current job is cleared');
+  ok(await pg.isDisabled('#jobStart'), 'Start disabled with nothing picked');
+  await pg.click('.jrow[data-jid="1.4"]'); await pg.click('.jrow[data-jid="3.2"]'); await pg.click('.jrow[data-jid="5.1"]');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/newjob.png' });
+  await pg.click('#jobStart');
+  ok(!(await pg.isVisible('#jobModal')), 'Start job closes modal');
+  ok(await pg.locator('.row:visible').count() === 3, 'Only the 3 picked tests are shown (3.0 opened)');
+  const st2 = await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')));
+  ok(Object.keys(st2.done).length === 0 && Object.keys(st2.sel).join() === '1.4,3.2,5.1', 'Old job cleared, new selection saved');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/newjob-home.png' });
+  await pg.click('#fAll');
+  ok(await pg.locator('.row:visible').count() === 98 - 7, 'All shows every test to add more (4.0 still collapsed)');
+  await pg.click('#row-1\\.5 .chk');
+  await pg.click('#fSel');
+  ok(await pg.locator('.row:visible').count() === 4, 'Added test shows under Selected');
+
   // Returning from a section in a collapsed chapter opens that chapter
   await pg.goto(URL + '#/');
   await pg.click('#fAll');
