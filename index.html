@@ -192,7 +192,7 @@ details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid r
 .pn button small { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
 .pn button span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
 .pn button span b { font-family: var(--font-data); color: var(--accent); margin-right: 6px; }
-/* Ikke valgt test: Performed er grå, trykk spør om den skal legges til Selected */
+/* Ikke valgt test: Performed er grå, trykk spør om den skal legges til jobben */
 button.off, button.primary.off { background: var(--panel2); border-color: var(--line); color: var(--muted); }
 .signrow { display: flex; justify-content: flex-end; }
 
@@ -237,8 +237,8 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
 <header class="bar" id="bar">
   <div class="bar-in" id="barHome">
     <div class="seg" role="group" aria-label="Show">
-      <button type="button" id="fAll" aria-pressed="true">All</button>
-      <button type="button" id="fSel" aria-pressed="false">Selected</button>
+      <button type="button" id="fSel" aria-pressed="false">Job</button>
+      <button type="button" id="fAll" aria-pressed="true">Add tests</button>
     </div>
     <button type="button" class="primary newjob" id="newJobBtn">New job</button>
   </div>
@@ -385,14 +385,14 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
       });
       html += "</div></section>";
     });
-    if (!html) html = '<div class="card empty">No tests selected. Tap <b>New job</b> to choose the tests, or switch to <b>All</b> and tick them.</div>';
+    if (!html) html = '<div class="card empty">No tests in this job. Tap <b>New job</b> to choose the tests, or <b>Add tests</b> and tick them.</div>';
     $("chapters").innerHTML = html;
     renderSummary();
   }
   function renderSummary() {
     var nSel = selCount();
     $("fAll").setAttribute("aria-pressed", !filterSel); $("fSel").setAttribute("aria-pressed", filterSel);
-    $("fSel").textContent = "Selected" + (nSel ? " (" + nSel + ")" : "");
+    $("fSel").textContent = "Job" + (nSel ? " (" + nSel + ")" : "");
   }
 
   $("chapters").addEventListener("click", function (e) {
@@ -561,9 +561,9 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
     var d = S.done[id];
     if (d) { askUnsign(id); return; }
     if (!S.sel[id]) {
-      openModal(secTitle(id), "<p>This test is not selected for the job. Add it to Selected?</p>",
-        '<button type="button" data-act="cancel">Cancel</button><button type="submit" class="primary">Add to Selected</button>',
-        function () { S.sel[id] = true; save(); refresh(); toast(id + " added to Selected"); });
+      openModal(secTitle(id), "<p>This test is not in the job. Add it to the job?</p>",
+        '<button type="button" data-act="cancel">Cancel</button><button type="submit" class="primary">Add to job</button>',
+        function () { S.sel[id] = true; save(); refresh(); toast(id + " added to job"); });
       return;
     }
     S.done[id] = { at: new Date().toISOString() };

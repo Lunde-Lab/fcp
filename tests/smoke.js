@@ -118,7 +118,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   ok(await pg.locator('#secSel').count() === 0, 'No "Selected for this FCP" toggle');
   ok(await pg.locator('#signCard .bigsign.off').count() === 1, 'Performed greyed out when not selected');
   await pg.click('#signCard .bigsign');
-  ok(await pg.isVisible('#signModal') && (await pg.textContent('#smBody')).includes('Add it to Selected'), 'Tap asks to add to Selected');
+  ok(await pg.isVisible('#signModal') && (await pg.textContent('#smBody')).includes('Add it to the job'), 'Tap asks to add to Selected');
   await pg.click('#smBtns .primary');
   ok(await pg.evaluate(() => { const o = JSON.parse(localStorage.getItem('fcp-v1')); return o.sel['1.7'] && !o.done['1.7']; }), '1.7 added to Selected, not performed yet');
   ok(await pg.locator('#signCard .bigsign.off').count() === 0, 'Performed active after adding');
