@@ -193,9 +193,9 @@ details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid r
 .pn button small { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
 .pn button span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
 .pn button span b { font-family: var(--font-data); color: var(--accent); margin-right: 6px; }
-.selrow { display: flex; align-items: center; gap: 4px; }
-.selrow .chk { width: 48px; }
-.selrow label { font-weight: 600; }
+/* Ikke valgt test: Performed er grå, trykk spør om den skal legges til Selected */
+button.off, button.primary.off { background: var(--panel2); border-color: var(--line); color: var(--muted); }
+.signcard .bigsign:only-child { flex: 1; }
 
 /* Modal */
 .modal { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.55); display: flex; align-items: flex-end; justify-content: center; padding: 12px; padding-bottom: max(12px, env(safe-area-inset-bottom, 0px)); }
@@ -356,7 +356,7 @@ details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid r
     var d = S.done[id];
     if (!d && home && !S.sel[id]) return "";
     if (d) return '<button type="button" class="signed" data-sign="' + id + '">✓ Performed<small>' + esc(stamp(d.at)) + '</small></button>';
-    return '<button type="button" class="sign" data-sign="' + id + '">Performed</button>';
+    return '<button type="button" class="sign' + (S.sel[id] ? "" : " off") + '" data-sign="' + id + '">Performed</button>';
   }
   function recSummary() {
     var it = SEC["4.2"].item, r = S.rec["4.2"] || {}, parts = [];
@@ -537,18 +537,13 @@ details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid r
     var d = S.done[id];
     $("barSign").innerHTML = statusHtml(id);
     var html = '<div class="card signcard' + (d ? " done" : "") + '">';
-    html += '<div class="selrow"><button type="button" class="chk" role="checkbox" aria-checked="' + !!S.sel[id] + '" id="secSel" aria-labelledby="secSelL"><i>' + CHECK + '</i></button><label id="secSelL" for="secSel">Selected for this FCP</label></div>';
     if (d) html += '<div class="who"><b>✓ Performed</b><small>' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '</small></div><button type="button" data-sign="' + id + '">Undo</button>';
-    else html += '<button type="button" class="primary bigsign" data-sign="' + id + '">Performed</button>';
+    else html += '<button type="button" class="primary bigsign' + (S.sel[id] ? "" : " off") + '" data-sign="' + id + '">Performed</button>';
     $("signCard").innerHTML = html + "</div>";
   }
   function onSecClick(e) {
     var b = e.target.closest("button"); if (!b) return;
-    if (b.id === "secSel") {
-      if (S.sel[cur] && S.done[cur]) { askUnsign(cur, function () { delete S.sel[cur]; }); return; }
-      if (S.sel[cur]) delete S.sel[cur]; else S.sel[cur] = true;
-      save(); renderSignParts(cur);
-    } else if (b.dataset.sign) openSign(b.dataset.sign);
+    if (b.dataset.sign) openSign(b.dataset.sign);
   }
   $("signCard").addEventListener("click", onSecClick);
   $("barSign").addEventListener("click", onSecClick);
@@ -567,7 +562,13 @@ details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid r
   function openSign(id) {
     var d = S.done[id];
     if (d) { askUnsign(id); return; }
-    S.sel[id] = true; S.done[id] = { at: new Date().toISOString() };
+    if (!S.sel[id]) {
+      openModal(secTitle(id), "<p>This test is not selected for the job. Add it to Selected?</p>",
+        '<button type="button" data-act="cancel">Cancel</button><button type="submit" class="primary">Add to Selected</button>',
+        function () { S.sel[id] = true; save(); refresh(); toast(id + " added to Selected"); });
+      return;
+    }
+    S.done[id] = { at: new Date().toISOString() };
     save(); refresh(); toast(id + " performed");
   }
   function askUnsign(id, then) {

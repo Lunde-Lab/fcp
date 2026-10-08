@@ -14,7 +14,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 - **Front page** = PDF pages 120–122 (chapters 1.0–5.0, items 1.1 … 5.11). PDF page 119 (header form) is intentionally dropped.
 - Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Performed**; one tap marks it performed (time stored). A performed task is struck through with reduced opacity. Tapping "✓ Performed" offers to undo it.
 - Chapters collapse by tapping the header; **3.0 and 4.0 are collapsed by default**. Returning from a procedure opens its chapter.
-- **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next, sign status. Bottom: selected toggle, **Performed**, prev/next.
+- **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next, sign status. Bottom: **Performed**, prev/next. No selected toggle on the procedure page: if the test is not selected, Performed is greyed out and tapping it asks "Add it to Selected?" (adds only; tap Performed again to mark it).
 - Filter **All / Selected**; with Selected active, prev/next steps through selected tests only.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
 - **New job** (top bar): modal listing all tests with per-chapter Select all; **Start job** clears the previous job (selections, sign-offs, records), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
