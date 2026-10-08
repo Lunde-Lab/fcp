@@ -64,6 +64,8 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   // Filter Selected
   await pg.click('#fSel');
   ok(await pg.locator('.row').count() === 2, 'Selected filter shows 2 rows');
+  ok(await pg.locator('#chapters .chk').count() === 0, 'No checkboxes in Selected view');
+  ok(await pg.locator('#barSum').count() === 0 && !(await pg.textContent('body')).includes('Not verified'), 'Bar title/summary and disclaimer removed');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-selected.png' });
 
   // Sign from section page with one tap

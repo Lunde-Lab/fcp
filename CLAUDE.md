@@ -24,6 +24,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 
 - No selected/performed/remaining counter card on the front page (removed on request).
 - No technician/initials – the button is just **Performed** (one tap). Performed tasks are struck through with reduced opacity.
+- **Selected** view has no checkboxes (deselect only from All). No bar title/progress text ("S-92A FCP / x of y performed") and no disclaimer line on the front page.
 - A new job starts by picking tests in the New job modal; after that only the selected tests are shown (All/Selected segmented control to add more).
 
 ## Files
