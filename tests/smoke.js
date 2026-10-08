@@ -54,7 +54,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('#row-1\\.1 .sign');
   ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('Performed'), '1.1 performed with one tap');
   const deco = await pg.$eval('#row-1\\.1 .go .t', e => getComputedStyle(e).textDecorationLine);
-  const op = await pg.$eval('#row-1\\.1 .go', e => +getComputedStyle(e).opacity);
+  const op = await pg.$eval('#row-1\\.1', e => +getComputedStyle(e).opacity);
   ok(deco.includes('line-through') && op < 1, 'Performed task is struck through with reduced opacity');
   ok(!(await pg.$eval('#row-1\\.2 .go .t', e => getComputedStyle(e).textDecorationLine)).includes('line-through'), 'Not performed task is not struck through');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-performed.png' });
