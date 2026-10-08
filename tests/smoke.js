@@ -45,11 +45,17 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('button[data-tog="3"]');
   ok(!(await pg.isVisible('#row-3\\.1')), 'Tapping again collapses it');
 
-  // Select tests; Performed signs with one tap, row gets struck through
+  // All view: only for picking tests – no Performed buttons
   await pg.click('#row-1\\.1 .chk');
   await pg.click('#row-1\\.2 .chk');
   ok((await pg.textContent('#fSel')).includes('2'), '2 tests selected');
-  ok(await pg.locator('#techAdd').count() === 0, 'Technician section removed');
+  ok(await pg.locator('#chapters .sign, #chapters .signed').count() === 0, 'No Performed buttons in All view');
+
+  // Selected view: Performed signs with one tap, row gets struck through
+  await pg.click('#fSel');
+  ok(await pg.locator('.row').count() === 2, 'Selected filter shows 2 rows');
+  ok(await pg.locator('#chapters .chk').count() === 0, 'No checkboxes in Selected view');
+  ok(await pg.locator('#barSum').count() === 0 && !(await pg.textContent('body')).includes('Not verified'), 'Bar title/summary and disclaimer removed');
   ok((await pg.textContent('#row-1\\.1 .sign')) === 'Performed', 'Button is named Performed');
   await pg.click('#row-1\\.1 .sign');
   ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('Performed'), '1.1 performed with one tap');
@@ -57,16 +63,12 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   const op = await pg.$eval('#row-1\\.1', e => +getComputedStyle(e).opacity);
   ok(deco.includes('line-through') && op < 1, 'Performed task is struck through with reduced opacity');
   ok(!(await pg.$eval('#row-1\\.2 .go .t', e => getComputedStyle(e).textDecorationLine)).includes('line-through'), 'Not performed task is not struck through');
-  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-performed.png' });
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-selected.png' });
   const st = await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')));
   ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].at && !st.done['1.2'], 'State saved');
-
-  // Filter Selected
+  await pg.click('#fAll');
+  ok(await pg.$eval('#row-1\\.1 .go .t', e => getComputedStyle(e).textDecorationLine.includes('line-through')), 'All view still shows performed tests struck through');
   await pg.click('#fSel');
-  ok(await pg.locator('.row').count() === 2, 'Selected filter shows 2 rows');
-  ok(await pg.locator('#chapters .chk').count() === 0, 'No checkboxes in Selected view');
-  ok(await pg.locator('#barSum').count() === 0 && !(await pg.textContent('body')).includes('Not verified'), 'Bar title/summary and disclaimer removed');
-  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-selected.png' });
 
   // Sign from section page with one tap
   await pg.click('#row-1\\.2 .go');
@@ -116,7 +118,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   ok(await pg.locator('#secSel').count() === 0, 'No "Selected for this FCP" toggle');
   ok(await pg.locator('#signCard .bigsign.off').count() === 1, 'Performed greyed out when not selected');
   await pg.click('#signCard .bigsign');
-  ok(await pg.isVisible('#signModal') && (await pg.textContent('#smBody')).includes('Add it to Selected'), 'Tap asks to add to Selected');
+  ok(await pg.isVisible('#signModal') && (await pg.textContent('#smBody')).includes('Add it to the job'), 'Tap asks to add to Selected');
   await pg.click('#smBtns .primary');
   ok(await pg.evaluate(() => { const o = JSON.parse(localStorage.getItem('fcp-v1')); return o.sel['1.7'] && !o.done['1.7']; }), '1.7 added to Selected, not performed yet');
   ok(await pg.locator('#signCard .bigsign.off').count() === 0, 'Performed active after adding');
