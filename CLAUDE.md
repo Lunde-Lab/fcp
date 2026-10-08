@@ -12,12 +12,18 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 ## What the app does
 
 - **Front page** = PDF pages 120–122 (chapters 1.0–5.0, items 1.1 … 5.11). PDF page 119 (header form) is intentionally dropped.
-- Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Sign**; signed rows show initials + time.
-- **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next, sign status. Bottom: selected toggle, **Sign off as performed**, prev/next.
-- Sign-off asks for initials (remembered), stores time. Tapping a sign-off offers to remove it.
+- **Technician** card at the top: several initials can be added (+ Add); tap one to make it active. Tapping the active one offers to remove it.
+- Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Performed**; one tap signs with the active technician (initials + time). With no technician yet it asks for initials first. Tapping a sign-off offers to remove it.
+- Chapters collapse by tapping the header; **3.0 and 4.0 are collapsed by default**. Returning from a procedure opens its chapter.
+- **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next, sign status. Bottom: selected toggle, **Performed** (shows active technician), prev/next.
 - Filter **All / Selected**; with Selected active, prev/next steps through selected tests only.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
 - **Share summary** (iOS share sheet / clipboard), **New FCP** clears everything.
+
+## Behaviour André has decided (don't undo without asking)
+
+- No selected/performed/remaining counter card on the front page (removed on request).
+- The sign button is called **Performed** and signs with one tap using the active technician.
 
 ## Files
 
@@ -40,7 +46,7 @@ Parser notes: the PDF draws `±` and `″` with pi fonts (mapped in `FONT_MAP`);
 
 - **Safari 15**: no `color-mix()`, no `:has()`, no top-level `await`; keep JS ES2019-ish. Test on 768×1024.
 - One file, no build step at runtime, no JS libraries. Touch targets ≥ 44 px. No horizontal page scroll (tables scroll inside `.tablewrap`).
-- **Never rename localStorage keys** (data on iPads would be lost): `fcp-v1` (`{sel, done, rec}`), `fcp-signer`, `fcp-filter`, `fcp-theme`. Schema changes must stay backward compatible (see `tidy()`).
+- **Never rename localStorage keys** (data on iPads would be lost): `fcp-v1` (`{sel, done, rec}`), `fcp-techs` (`{list, active}`), `fcp-collapsed` (`{chapterId: true}`), `fcp-filter`, `fcp-theme`, `fcp-signer` (old single signer, read once to seed `fcp-techs`). Schema changes must stay backward compatible (see `tidy()`).
 
 ## Test and release
 

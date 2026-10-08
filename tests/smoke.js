@@ -15,7 +15,9 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.evaluate(() => localStorage.clear());
   await pg.reload();
 
-  ok(await pg.locator('.row').count() === 98, 'Front page lists 98 tests');
+  ok(await pg.locator('.row').count() === 98, 'Front page has 98 tests');
+  ok(await pg.locator('.row:visible').count() === 98 - 6 - 7, 'Chapters 3.0 and 4.0 collapsed by default');
+  ok(await pg.locator('#nSel').count() === 0, 'Counter card removed');
   ok(await pg.locator('.chap').count() === 5, 'Front page has 5 chapters');
   const sw = await pg.evaluate(() => document.documentElement.scrollWidth);
   ok(sw <= 768, 'No horizontal scroll at 768 (' + sw + ')');
@@ -37,36 +39,62 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.waitForFunction(() => !document.getElementById('home').hidden, null, { timeout: 2000 }).catch(() => {});
   ok(await pg.isVisible('#home'), 'Back button returns to front page');
 
-  // Select tests and sign off
+  // Collapse toggle
+  await pg.click('button[data-tog="3"]');
+  ok(await pg.isVisible('#row-3\\.1'), 'Tapping 3.0 header expands it');
+  await pg.click('button[data-tog="3"]');
+  ok(!(await pg.isVisible('#row-3\\.1')), 'Tapping again collapses it');
+
+  // Select tests; first Performed without technician asks for initials
   await pg.click('#row-1\\.1 .chk');
   await pg.click('#row-1\\.2 .chk');
-  ok((await pg.textContent('#nSel')) === '2', '2 tests selected');
+  ok((await pg.textContent('#fSel')).includes('2'), '2 tests selected');
+  ok((await pg.textContent('#row-1\\.1 .sign')) === 'Performed', 'Button is named Performed');
   await pg.click('#row-1\\.1 .sign');
-  ok(await pg.isVisible('#signModal'), 'Sign modal opens');
+  ok(await pg.isVisible('#signModal'), 'No technician yet: add-technician modal opens');
   await pg.fill('#smWho', 'al');
   await pg.click('#smBtns .primary');
   ok((await pg.textContent('#row-1\\.1 .signed')).includes('AL'), '1.1 signed by AL');
-  ok((await pg.textContent('#nDone')) === '1' && (await pg.textContent('#nLeft')) === '1', 'Counters 1 performed / 1 remaining');
+  // Second technician, one tap to sign
+  await pg.click('#techAdd'); await pg.fill('#smWho', 'kb'); await pg.click('#smBtns .primary');
+  ok((await pg.textContent('.tchip[aria-checked="true"]')) === 'KB', 'KB added and active');
+  await pg.click('.tchip[data-tech="AL"]');
+  ok((await pg.textContent('.tchip[aria-checked="true"]')) === 'AL', 'Tap AL makes AL active');
+  await pg.click('.tchip[data-tech="KB"]');
+  await pg.click('#row-1\\.2 .sign');
+  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.2 .signed')).includes('KB'), '1.2 signed by KB with one tap');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-techs.png' });
   const st = await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')));
-  ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].by === 'AL', 'State saved');
+  ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].by === 'AL' && st.done['1.2'].by === 'KB', 'State saved');
+  await pg.click('#row-1\\.2 .signed'); await pg.click('#smBtns .danger');
 
   // Filter Selected
   await pg.click('#fSel');
   ok(await pg.locator('.row').count() === 2, 'Selected filter shows 2 rows');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-selected.png' });
 
-  // Sign from section page, signer remembered
+  // Sign from section page with one tap
   await pg.click('#row-1\\.2 .go');
+  await pg.waitForSelector('#signCard .bigsign');
+  ok((await pg.textContent('#signCard .bigsign')).includes('KB'), 'Section Performed button shows active technician');
   await pg.click('#signCard .bigsign');
-  ok((await pg.inputValue('#smWho')) === 'AL', 'Signer remembered');
-  await pg.click('#smBtns .primary');
-  ok((await pg.textContent('#signCard')).includes('Performed'), 'Section page shows Performed');
+  ok((await pg.textContent('#signCard')).includes('✓ Performed') && (await pg.textContent('#signCard')).includes('KB'), 'Section page signed by KB');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/sec-1.2-signed.png' });
 
   // Undo sign-off
   await pg.click('#signCard button[data-sign]');
   await pg.click('#smBtns .danger');
   ok(!(await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')).done['1.2'])), 'Sign-off removed');
+
+  // Returning from a section in a collapsed chapter opens that chapter
+  await pg.goto(URL + '#/');
+  await pg.click('#fAll');
+  await pg.click('#row-2\\.30 .go');
+  await pg.click('#nextBtn');
+  await pg.waitForFunction(() => location.hash === '#/3.1');
+  await pg.click('#backBtn');
+  await pg.waitForFunction(() => !document.getElementById('home').hidden);
+  ok(await pg.isVisible('#row-3\\.1'), 'Back from 3.1 expands 3.0');
 
   // 4.2 has record fields + figures
   await pg.goto(URL + '#/4.2');

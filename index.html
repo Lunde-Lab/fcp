@@ -83,14 +83,12 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 
 /* Fremside */
 .head { display: flex; flex-direction: column; gap: 4px; padding-top: 12px; }
-.sum { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
-.sum-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; }
-.stats { display: flex; gap: 22px; flex-wrap: wrap; }
-.stats div { display: flex; flex-direction: column; }
-.stats b { font-family: var(--font-data); font-size: 1.6rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--c, var(--fg)); }
-.stats small { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
-.prog { height: 8px; border-radius: 999px; background: var(--grid); overflow: hidden; }
-.prog i { display: block; height: 100%; width: 0; background: var(--good); border-radius: 999px; transition: width .3s; }
+/* Teknikere: tapp for å velge hvem som signerer */
+.techs { padding: 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.tchips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; min-width: 0; }
+.tchip { min-height: 48px; min-width: 68px; padding: 6px 18px; border-radius: 999px; font-family: var(--font-data); font-weight: 700; font-size: 1.1rem; }
+.tchip[aria-checked="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.tadd { border-style: dashed; color: var(--muted); font-family: var(--font-ui); font-size: .95rem; font-weight: 600; }
 .seg { display: inline-flex; gap: 4px; padding: 3px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--line); }
 .seg button { min-height: 44px; padding: 6px 16px; border: 0; background: transparent; font-weight: 600; color: var(--muted); }
 .seg button[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
@@ -98,8 +96,12 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 
 .chap { overflow: hidden; }
 .chap-h { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; background: var(--panel2); border-bottom: 1px solid var(--line); }
-.chap-h h3 { margin: 0; flex: 1; font-size: 1rem; font-weight: 700; letter-spacing: .02em; }
-.chap-h h3 span { font-family: var(--font-data); color: var(--accent); margin-right: 10px; }
+.chap-h h3 { margin: 0; flex: 1; min-width: 0; }
+.chap-h .chap-tog { width: 100%; min-height: 44px; padding: 4px 0; border: 0; border-radius: 0; background: transparent; display: flex; align-items: center; gap: 10px; text-align: left; font-size: 1rem; font-weight: 700; letter-spacing: .02em; }
+.chap-tog span { font-family: var(--font-data); color: var(--accent); }
+.chap-tog svg { width: 20px; height: 20px; flex: none; color: var(--muted); transition: transform .2s; }
+.chap-tog[aria-expanded="false"] svg { transform: rotate(-90deg); }
+.chap.closed .chap-h { border-bottom: 0; }
 .chap-h .cnt { font-family: var(--font-data); font-size: .85rem; color: var(--muted); white-space: nowrap; }
 .chap-h button { min-height: 40px; padding: 4px 12px; font-size: .85rem; }
 .rows { display: flex; flex-direction: column; }
@@ -121,7 +123,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 @keyframes flash { 0%, 30% { background: rgba(var(--accent-rgb), .18); } 100% { background: transparent; } }
 @media (prefers-reduced-motion: reduce) { .row.flash { animation: none; } }
 .st { flex: none; display: flex; align-items: center; padding: 6px 10px 6px 4px; }
-.sign { min-height: 44px; padding: 6px 14px; font-size: .92rem; font-weight: 700; color: var(--accent); border-color: rgba(var(--accent-rgb), .5); background: transparent; white-space: nowrap; }
+.sign { min-height: 44px; padding: 6px 12px; font-size: .92rem; font-weight: 700; color: var(--accent); border-color: rgba(var(--accent-rgb), .5); background: transparent; white-space: nowrap; }
 .signed { min-height: 44px; padding: 4px 12px; display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; border-color: rgba(var(--good-rgb), .5); background: rgba(var(--good-rgb), .14); color: var(--good); font-weight: 700; font-size: .9rem; line-height: 1.15; text-align: left; white-space: nowrap; }
 .signed small { font-family: var(--font-data); font-weight: 500; font-size: .72rem; color: var(--muted); }
 .empty { padding: 18px 16px; color: var(--muted); font-size: .92rem; }
@@ -171,6 +173,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 .signcard.done { border-color: rgba(var(--good-rgb), .55); background: rgba(var(--good-rgb), .1); }
 .signcard.done .who b { color: var(--good); }
 .bigsign { min-height: 56px; padding: 10px 26px; font-size: 1.1rem; }
+.bigsign small { font-family: var(--font-data); font-weight: 500; margin-left: 8px; opacity: .8; }
 .pn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pn button { min-height: 56px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; text-align: left; padding: 8px 14px; min-width: 0; }
 .pn button.nx { align-items: flex-end; text-align: right; }
@@ -222,16 +225,9 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
         <h1>S-92A Flight Check Procedures</h1>
         <p class="sub" id="docInfo"></p>
       </div>
-      <div class="card sum">
-        <div class="sum-row">
-          <div class="stats">
-            <div class="acc"><b id="nSel">0</b><small>Selected</small></div>
-            <div class="good"><b id="nDone">0</b><small>Performed</small></div>
-            <div class="warn"><b id="nLeft">0</b><small>Remaining</small></div>
-          </div>
-          <p class="fine" id="selHint">Tick the tests to perform. Tap a number to open it.</p>
-        </div>
-        <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+      <div class="card techs">
+        <h2>Technician</h2>
+        <div class="tchips" id="techList" role="radiogroup" aria-label="Technician"></div>
       </div>
       <div id="chapters" class="wrap"></div>
       <div class="foot">
@@ -272,7 +268,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   "use strict";
   var D = JSON.parse(document.getElementById("fcp-data").textContent);
   var $ = function (id) { return document.getElementById(id); };
-  var KEY = "fcp-v1", SIGNKEY = "fcp-signer", FILTKEY = "fcp-filter", THEMEKEY = "fcp-theme";
+  var KEY = "fcp-v1", SIGNKEY = "fcp-signer", FILTKEY = "fcp-filter", THEMEKEY = "fcp-theme", TECHKEY = "fcp-techs", COLKEY = "fcp-collapsed";
 
   // ---------- data ----------
   var SEC = {}, ORDER = [], TITLE = {}, CHAP = {};
@@ -298,6 +294,19 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   var filterSel = lsGet(FILTKEY) === "sel";
+  // Teknikere: { list: ["AL", "KB"], active: "AL" }. Eldre versjon hadde én signatur i fcp-signer.
+  var T = (function () {
+    var o = null;
+    try { o = JSON.parse(lsGet(TECHKEY)); } catch (e) {}
+    if (!o || !Array.isArray(o.list)) { var old = lsGet(SIGNKEY); o = { list: old ? [old] : [], active: old || "" }; }
+    o.list = o.list.filter(function (x) { return typeof x === "string" && x; });
+    if (o.list.indexOf(o.active) < 0) o.active = o.list[0] || "";
+    return o;
+  })();
+  function saveTechs() { lsSet(TECHKEY, JSON.stringify(T)); }
+  // Kapitler som er lukket. 3.0 og 4.0 er lukket som standard.
+  var COL = (function () { try { var o = JSON.parse(lsGet(COLKEY)); if (o && typeof o === "object") return o; } catch (e) {} return { "3": true, "4": true }; })();
+  function saveCol() { lsSet(COLKEY, JSON.stringify(COL)); }
 
   // ---------- helpers ----------
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -321,7 +330,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
     var d = S.done[id];
     if (!d && home && !S.sel[id]) return "";
     if (d) return '<button type="button" class="signed" data-sign="' + id + '">✓ ' + esc(d.by) + '<small>' + esc(stamp(d.at)) + '</small></button>';
-    return '<button type="button" class="sign" data-sign="' + id + '">Sign</button>';
+    return '<button type="button" class="sign" data-sign="' + id + '">Performed</button>';
   }
   function recSummary() {
     var it = SEC["4.2"].item, r = S.rec["4.2"] || {}, parts = [];
@@ -336,10 +345,13 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
       var nSel = c.items.filter(function (it) { return S.sel[it.id]; }).length;
       var nDone = c.items.filter(function (it) { return S.sel[it.id] && S.done[it.id]; }).length;
       var all = nSel === c.items.length;
-      html += '<section class="card chap"><div class="chap-h"><h3><span>' + c.id + '.0</span>' + esc(c.title) + '</h3>' +
+      var closed = !!COL[c.id];
+      html += '<section class="card chap' + (closed ? " closed" : "") + '"><div class="chap-h"><h3><button type="button" class="chap-tog" data-tog="' + c.id + '" aria-expanded="' + !closed + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
+        '<span>' + c.id + '.0</span>' + esc(c.title) + '</button></h3>' +
         '<span class="cnt">' + (nSel ? nDone + "/" + nSel : "") + '</span>' +
-        (filterSel ? "" : '<button type="button" data-chap="' + c.id + '">' + (all ? "Clear" : "Select all") + '</button>') + '</div>' +
-        '<div class="rows' + (any && !filterSel ? " dim" : "") + '">';
+        (filterSel || closed ? "" : '<button type="button" data-chap="' + c.id + '">' + (all ? "Clear" : "Select all") + '</button>') + '</div>' +
+        '<div class="rows' + (any && !filterSel ? " dim" : "") + '"' + (closed ? " hidden" : "") + '>';
       items.forEach(function (it) {
         var sub = it.id === "4.2" ? recSummary() : "";
         html += '<div class="row' + (S.sel[it.id] ? " sel" : "") + '" id="row-' + it.id + '">' +
@@ -355,8 +367,6 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   }
   function renderSummary() {
     var nSel = selCount(), nDone = ORDER.filter(function (id) { return S.sel[id] && S.done[id]; }).length;
-    $("nSel").textContent = nSel; $("nDone").textContent = nDone; $("nLeft").textContent = nSel - nDone;
-    $("progBar").style.width = (nSel ? 100 * nDone / nSel : 0) + "%";
     $("barSum").textContent = nSel ? nDone + " of " + nSel + " performed" : D.doc;
     $("fAll").setAttribute("aria-pressed", !filterSel); $("fSel").setAttribute("aria-pressed", filterSel);
     $("fSel").textContent = "Selected" + (nSel ? " (" + nSel + ")" : "");
@@ -373,9 +383,41 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
       var c = CHAP[b.dataset.chap], all = c.items.every(function (it) { return S.sel[it.id]; });
       c.items.forEach(function (it) { if (all) { if (!S.done[it.id]) delete S.sel[it.id]; } else S.sel[it.id] = true; });
       save(); renderHome();
+    } else if (b.dataset.tog) {
+      if (COL[b.dataset.tog]) delete COL[b.dataset.tog]; else COL[b.dataset.tog] = true;
+      saveCol(); renderHome();
     } else if (b.dataset.sign) {
       openSign(b.dataset.sign);
     }
+  });
+
+  // ---------- technicians ----------
+  function renderTechs() {
+    $("techList").innerHTML = T.list.map(function (t) {
+      return '<button type="button" class="tchip" role="radio" aria-checked="' + (t === T.active) + '" data-tech="' + esc(t) + '">' + esc(t) + '</button>';
+    }).join("") + '<button type="button" class="tchip tadd" id="techAdd">+ Add</button>';
+  }
+  function addTech(then) {
+    openModal("Add technician",
+      '<label class="fld">Initials<input id="smWho" maxlength="12" autocapitalize="characters" spellcheck="false"></label>',
+      '<button type="button" data-act="cancel">Cancel</button><button type="submit" class="primary">Add</button>',
+      function () {
+        var inp = $("smWho"), who = inp.value.trim().toUpperCase();
+        if (!who) { inp.classList.add("bad"); inp.focus(); return false; }
+        if (T.list.indexOf(who) < 0) T.list.push(who);
+        T.active = who; saveTechs(); renderTechs();
+        if (then) then();
+      });
+    var inp = $("smWho"); setTimeout(function () { inp.focus(); }, 30);
+  }
+  $("techList").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.id === "techAdd") { addTech(); return; }
+    var t = b.dataset.tech;
+    if (t !== T.active) { T.active = t; saveTechs(); renderTechs(); return; }
+    openModal("Technician " + esc(t), "<p>Remove " + esc(t) + " from the list? Sign-offs already made are kept.</p>",
+      '<button type="button" data-act="cancel">Keep</button><button type="submit" class="danger">Remove</button>',
+      function () { T.list.splice(T.list.indexOf(t), 1); T.active = T.list[0] || ""; saveTechs(); renderTechs(); });
   });
   function setFilter(v) { filterSel = v; lsSet(FILTKEY, v ? "sel" : "all"); renderHome(); window.scrollTo(0, 0); }
   $("fAll").addEventListener("click", function () { setFilter(false); });
@@ -458,7 +500,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
     var html = '<div class="card signcard' + (d ? " done" : "") + '">';
     html += '<div class="selrow"><button type="button" class="chk" role="checkbox" aria-checked="' + !!S.sel[id] + '" id="secSel" aria-labelledby="secSelL"><i>' + CHECK + '</i></button><label id="secSelL" for="secSel">Selected for this FCP</label></div>';
     if (d) html += '<div class="who"><b>✓ Performed</b><small>' + esc(d.by) + ' · ' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '</small></div><button type="button" data-sign="' + id + '">Undo</button>';
-    else html += '<button type="button" class="primary bigsign" data-sign="' + id + '">Sign off as performed</button>';
+    else html += '<button type="button" class="primary bigsign" data-sign="' + id + '">Performed' + (T.active ? '<small>' + esc(T.active) + '</small>' : "") + '</button>';
     $("signCard").innerHTML = html + "</div>";
   }
   function onSecClick(e) {
@@ -486,17 +528,9 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   function openSign(id) {
     var d = S.done[id];
     if (d) { askUnsign(id); return; }
-    openModal(secTitle(id),
-      '<label class="fld">Signature (initials)<input id="smWho" maxlength="12" autocapitalize="characters" spellcheck="false" value="' + esc(lsGet(SIGNKEY) || "") + '"></label>',
-      '<button type="button" data-act="cancel">Cancel</button><button type="submit" class="primary">Sign off</button>',
-      function () {
-        var inp = $("smWho"), who = inp.value.trim().toUpperCase();
-        if (!who) { inp.classList.add("bad"); inp.focus(); return false; }
-        lsSet(SIGNKEY, who);
-        S.sel[id] = true; S.done[id] = { by: who, at: new Date().toISOString() };
-        save(); refresh(); toast(id + " signed off");
-      });
-    var inp = $("smWho"); setTimeout(function () { inp.focus(); inp.select(); }, 30);
+    if (!T.active) { addTech(function () { openSign(id); }); return; }
+    S.sel[id] = true; S.done[id] = { by: T.active, at: new Date().toISOString() };
+    save(); refresh(); toast(id + " performed – " + T.active);
   }
   function askUnsign(id, then) {
     var d = S.done[id];
@@ -507,8 +541,9 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
   }
   $("signForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    if (modalCb && modalCb() === false) return;
+    var cb = modalCb;
     closeModal();
+    if (cb && cb() === false) { $("signModal").hidden = false; modalCb = cb; }
   });
   $("smBtns").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b && b.dataset.act === "cancel") closeModal(); });
   $("signModal").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
@@ -535,6 +570,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
       $("home").hidden = false; $("barHome").hidden = false;
       renderHome();
       document.title = "S-92 FCP";
+      if (lastSec && COL[SEC[lastSec].chapter]) { delete COL[SEC[lastSec].chapter]; saveCol(); renderHome(); }
       var row = lastSec && $("row-" + lastSec);
       if (row) {
         var r = row.getBoundingClientRect(), top = r.top + window.scrollY;
@@ -595,6 +631,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
     themeLabel();
   });
 
+  renderTechs();
   route();
   booted = true;
 })();
