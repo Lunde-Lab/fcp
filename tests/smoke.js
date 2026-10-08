@@ -45,28 +45,21 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('button[data-tog="3"]');
   ok(!(await pg.isVisible('#row-3\\.1')), 'Tapping again collapses it');
 
-  // Select tests; first Performed without technician asks for initials
+  // Select tests; Performed signs with one tap, row gets struck through
   await pg.click('#row-1\\.1 .chk');
   await pg.click('#row-1\\.2 .chk');
   ok((await pg.textContent('#fSel')).includes('2'), '2 tests selected');
+  ok(await pg.locator('#techAdd').count() === 0, 'Technician section removed');
   ok((await pg.textContent('#row-1\\.1 .sign')) === 'Performed', 'Button is named Performed');
   await pg.click('#row-1\\.1 .sign');
-  ok(await pg.isVisible('#signModal'), 'No technician yet: add-technician modal opens');
-  await pg.fill('#smWho', 'al');
-  await pg.click('#smBtns .primary');
-  ok((await pg.textContent('#row-1\\.1 .signed')).includes('AL'), '1.1 signed by AL');
-  // Second technician, one tap to sign
-  await pg.click('#techAdd'); await pg.fill('#smWho', 'kb'); await pg.click('#smBtns .primary');
-  ok((await pg.textContent('.tchip[aria-checked="true"]')) === 'KB', 'KB added and active');
-  await pg.click('.tchip[data-tech="AL"]');
-  ok((await pg.textContent('.tchip[aria-checked="true"]')) === 'AL', 'Tap AL makes AL active');
-  await pg.click('.tchip[data-tech="KB"]');
-  await pg.click('#row-1\\.2 .sign');
-  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.2 .signed')).includes('KB'), '1.2 signed by KB with one tap');
-  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-techs.png' });
+  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('Performed'), '1.1 performed with one tap');
+  const deco = await pg.$eval('#row-1\\.1 .go .t', e => getComputedStyle(e).textDecorationLine);
+  const op = await pg.$eval('#row-1\\.1 .go', e => +getComputedStyle(e).opacity);
+  ok(deco.includes('line-through') && op < 1, 'Performed task is struck through with reduced opacity');
+  ok(!(await pg.$eval('#row-1\\.2 .go .t', e => getComputedStyle(e).textDecorationLine)).includes('line-through'), 'Not performed task is not struck through');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/home-performed.png' });
   const st = await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')));
-  ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].by === 'AL' && st.done['1.2'].by === 'KB', 'State saved');
-  await pg.click('#row-1\\.2 .signed'); await pg.click('#smBtns .danger');
+  ok(st.sel['1.1'] && st.sel['1.2'] && st.done['1.1'].at && !st.done['1.2'], 'State saved');
 
   // Filter Selected
   await pg.click('#fSel');
@@ -76,9 +69,8 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   // Sign from section page with one tap
   await pg.click('#row-1\\.2 .go');
   await pg.waitForSelector('#signCard .bigsign');
-  ok((await pg.textContent('#signCard .bigsign')).includes('KB'), 'Section Performed button shows active technician');
   await pg.click('#signCard .bigsign');
-  ok((await pg.textContent('#signCard')).includes('✓ Performed') && (await pg.textContent('#signCard')).includes('KB'), 'Section page signed by KB');
+  ok((await pg.textContent('#signCard')).includes('✓ Performed'), 'Section page Performed with one tap');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/sec-1.2-signed.png' });
 
   // Undo sign-off
