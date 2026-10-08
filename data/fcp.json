@@ -7419,12 +7419,12 @@
     {
      "t": "p",
      "text": "AFCS 1",
-     "lvl": 2
+     "lvl": 3
     },
     {
      "t": "p",
      "text": "AFCS 2",
-     "lvl": 2
+     "lvl": 3
     },
     {
      "t": "p",
@@ -7464,12 +7464,12 @@
     {
      "t": "p",
      "text": "PUMP 1",
-     "lvl": 2
+     "lvl": 3
     },
     {
      "t": "p",
      "text": "PUMP 2",
-     "lvl": 2
+     "lvl": 3
     },
     {
      "t": "p",
@@ -8339,7 +8339,7 @@
      "t": "step",
      "lvl": 2,
      "n": "b",
-     "text": "Verify that the left pedal is 11⁄2″ ±3⁄4″ forward of the right pedal."
+     "text": "Verify that the left pedal is 1½″ ±¾″ forward of the right pedal."
     }
    ]
   },
@@ -8932,7 +8932,7 @@
      "t": "step",
      "lvl": 1,
      "n": "3",
-     "text": "Check the standby attitude indicator for smooth operation and agreement with the PDFs."
+     "text": "Check the standby attitude indicator for smooth operation and agreement with the PFDs."
     },
     {
      "t": "step",
@@ -9379,7 +9379,7 @@
      "t": "step",
      "lvl": 2,
      "n": "a",
-     "text": "The ball should stay within 1⁄2 ball width of the center during the turn."
+     "text": "The ball should stay within ½ ball width of the center during the turn."
     },
     {
      "t": "step",
@@ -9415,7 +9415,7 @@
      "t": "step",
      "lvl": 2,
      "n": "a",
-     "text": "The ball should stay within 1⁄2 ball width of the center during the turn."
+     "text": "The ball should stay within ½ ball width of the center during the turn."
     },
     {
      "t": "step",
@@ -9899,7 +9899,7 @@
      "t": "step",
      "lvl": 2,
      "n": "a",
-     "text": "Smooth capture of the localizer with no more than a 1⁄2 dot overshoot."
+     "text": "Smooth capture of the localizer with no more than a ½ dot overshoot."
     },
     {
      "t": "step",
@@ -9935,7 +9935,7 @@
      "t": "step",
      "lvl": 2,
      "n": "g",
-     "text": "Smooth capture of the glideslope with no more than a 1⁄2 dot overshoot."
+     "text": "Smooth capture of the glideslope with no more than a ½ dot overshoot."
     },
     {
      "t": "step",
@@ -10176,7 +10176,7 @@
      "t": "step",
      "lvl": 2,
      "n": "a",
-     "text": "Smooth capture of the localizer with no more than a 1⁄2 dot overshoot."
+     "text": "Smooth capture of the localizer with no more than a ½ dot overshoot."
     },
     {
      "t": "step",
@@ -10206,7 +10206,7 @@
      "t": "step",
      "lvl": 2,
      "n": "f",
-     "text": "Smooth capture of the glideslope with no more than a 1⁄2 dot overshoot."
+     "text": "Smooth capture of the glideslope with no more than a ½ dot overshoot."
     },
     {
      "t": "step",

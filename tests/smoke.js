@@ -28,8 +28,13 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.waitForFunction(() => !document.getElementById('sec').hidden, null, { timeout: 2000 }).catch(() => {});
   ok(await pg.isVisible('#sec') && !(await pg.isVisible('#home')), '1.1 opens section page');
   ok((await pg.textContent('#doc h1')).includes('EXTERNAL EMERGENCY LIGHTS'), 'Section title shown');
+  ok(await pg.locator('#doc .adm.warning').count() === 2, '1.0 chapter warnings shown on 1.1');
   ok(await pg.isVisible('#backBtn'), 'Back button visible');
   // Back button stays visible after scrolling (sticky)
+  await pg.goto(URL + '#/3.4');
+  ok((await pg.textContent('#doc')).includes('1½″ ±¾″'), 'Fractions shown as ½ ¾ (3.4)');
+  await pg.goto(URL + '#/2.2');
+  ok(await pg.locator('#doc .adm.warning').count() === 0, 'Chapter warnings only on first test');
   await pg.goto(URL + '#/2.11');
   await pg.evaluate(() => window.scrollTo(0, 5000));
   const bb = await pg.locator('#backBtn').boundingBox();

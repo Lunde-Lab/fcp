@@ -46,7 +46,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 
 `index` = front page chapters/items (`sign: false` for 2.9, which has no sign line in the PDF; 4.2 has `fields`). `sections[]` = `{id, chapter, title, page, blocks[]}`, blocks:
 `step {lvl 1–3, n, text}` · `warning|caution|note {text}` · `h {id, text}` (sub-headings like 2.16.1) · `p {text, lvl}` · `table {rows}`.
-Parser notes: the PDF draws `±` and `″` with pi fonts (mapped in `FONT_MAP`); some steps lack the dot after the label (`LOOSE_RE`); header/footer are cut by y-position. After changing the parser, check that no words are lost (compare word counts against `pdftotext`) and look at screenshots.
+Parser notes: the PDF draws `±` and `″` with pi fonts (mapped in `FONT_MAP`); fractions are small digits around `⁄` (→ `½ ¼ ¾`, `VULGAR`); some steps lack the dot after the label (`LOOSE_RE`); nested list items (2.25) get `lvl` from their indent; header/footer are cut by y-position. `chapters` holds text before a chapter's first test (the two 1.0 WARNINGs) – shown at the top of 1.1. `ERRATA` = PDF typos André has asked to correct (4.1 `PDFs` → `PFDs`); the only allowed deviations from the PDF text. After changing the parser, check that no words are lost (compare word counts against `pdftotext`) and look at screenshots.
 
 ## Hard constraints
 
