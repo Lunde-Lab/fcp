@@ -148,6 +148,39 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   }
   ok(bad.length === 0, 'All ' + ids.length + ' sections render content' + (bad.length ? ' (empty: ' + bad + ')' : ''));
 
+  // PDF button opens the original pages for the test
+  await pg.goto(URL + '#/2.16');
+  await pg.waitForSelector('#pdfBtn');
+  ok((await pg.textContent('#pdfBtn')).includes('1-58'), 'PDF button shows printed page (' + (await pg.textContent('#pdfBtn')) + ')');
+  await pg.click('#pdfBtn');
+  ok(await pg.isVisible('#pdfView'), 'PDF view opens');
+  const srcs = await pg.$$eval('#pdfPages img', l => l.map(i => i.getAttribute('src')));
+  ok(srcs.length >= 2 && srcs[0] === 'pages/p051.png', 'PDF view shows pages 51.. (' + srcs.join(',') + ')');
+  await pg.waitForFunction(() => { const i = document.querySelector('#pdfPages img'); return i && i.complete && i.naturalWidth > 1000; }, null, { timeout: 3000 }).catch(() => {});
+  ok(await pg.$eval('#pdfPages img', i => i.naturalWidth > 1000), 'PDF page image loads');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/pdf.png' });
+  await pg.click('#pdfClose');
+  ok(!(await pg.isVisible('#pdfView')), 'PDF view closes');
+
+  // Landscape iPad: split view (list left, test right)
+  await pg.setViewportSize({ width: 1024, height: 768 });
+  await pg.goto(URL + '#/');
+  await pg.waitForTimeout(200);
+  ok(await pg.evaluate(() => document.body.classList.contains('split')), 'Landscape uses split view');
+  ok(await pg.isVisible('#home') && await pg.isVisible('#secEmpty'), 'Split: list left, empty state right');
+  await pg.click('#fAll');
+  await pg.click('#row-1\\.4 .go');
+  await pg.waitForFunction(() => location.hash === '#/1.4');
+  ok(await pg.isVisible('#home') && await pg.isVisible('#doc') && (await pg.textContent('#doc h1')).includes('BATTERY'), 'Split: tapping a test opens it on the right, list stays');
+  ok(await pg.$eval('#row-1\\.4', e => e.classList.contains('cur')), 'Split: current test highlighted in list');
+  ok(!(await pg.isVisible('#backBtn')), 'Split: no back button');
+  const sw3 = await pg.evaluate(() => document.documentElement.scrollWidth);
+  ok(sw3 <= 1024, 'Split: no horizontal scroll (' + sw3 + ')');
+  if (SHOTS) await pg.screenshot({ path: SHOTS + '/split.png' });
+  await pg.setViewportSize({ width: 768, height: 1024 });
+  await pg.waitForTimeout(200);
+  ok(!(await pg.evaluate(() => document.body.classList.contains('split'))) && !(await pg.isVisible('#home')), 'Back to portrait: single view again');
+
   // Phone width: no horizontal scroll
   await pg.setViewportSize({ width: 390, height: 844 });
   await pg.goto(URL + '#/');

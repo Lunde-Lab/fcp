@@ -298,6 +298,28 @@ def render_figures():
         Image.open(base + ".png").convert("L").save(base + ".png", optimize=True)
 
 
+def render_pages():
+    """Original PDF pages for "View in PDF": pages/pNNN.png, 150 dpi, 16 colours (keeps the red annunciators)."""
+    out = os.path.join(ROOT, "pages")
+    os.makedirs(out, exist_ok=True)
+    tmp = os.path.join(out, "tmp")
+    subprocess.run(["pdftoppm", "-f", str(PROC_PAGES[0]), "-l", str(PROC_PAGES[-1]), "-r", "150", "-png", PDF, tmp], check=True)
+    for pn in PROC_PAGES:
+        src = "%s-%03d.png" % (tmp, pn)
+        Image.open(src).convert("RGB").quantize(16).save(os.path.join(out, "p%03d.png" % pn), optimize=True)
+        os.remove(src)
+
+
+def page_labels():
+    """Printed page number per PDF page (footer, e.g. "1-59")."""
+    labels = {}
+    for pn in PROC_PAGES:
+        t = subprocess.run(["pdftotext", "-layout", "-f", str(pn), "-l", str(pn), PDF, "-"], capture_output=True, text=True).stdout
+        m = re.findall(r"\b(1-\d{1,3})\b", t.strip().splitlines()[-1] if t.strip() else "")
+        labels[pn] = m[-1] if m else ""
+    return labels
+
+
 def main():
     pdf = pdfplumber.open(PDF)
     chapters, sections = parse_procedures(pdf)
@@ -307,6 +329,10 @@ def main():
         for it in ch["items"]:
             if it["id"] not in ids:
                 sys.exit("index item %s has no section" % it["id"])
+    # page range per section: from its first page to the page where the next section starts
+    for i, sec in enumerate(sections):
+        end = sections[i + 1]["page"] if i + 1 < len(sections) else PROC_PAGES[-1]
+        sec["pages"] = [sec["page"], max(sec["page"], end)]
     figs = []
     for pn, n in FIG_PAGES.items():
         t = subprocess.run(["pdftotext", "-f", str(pn), "-l", str(pn), PDF, "-"], capture_output=True, text=True).stdout
@@ -320,12 +346,15 @@ def main():
         "chapters": {k: {"title": v["title"], "blocks": v["blocks"]} for k, v in chapters.items()},
         "sections": sections,
         "figures": figs,
+        "pageLabels": page_labels(),
     }
     os.makedirs(os.path.join(ROOT, "data"), exist_ok=True)
     with open(os.path.join(ROOT, "data", "fcp.json"), "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
     if "--no-figures" not in sys.argv:
         render_figures()
+    if "--no-pages" not in sys.argv:
+        render_pages()
     # inline into index.html
     html_path = os.path.join(ROOT, "index.html")
     if os.path.exists(html_path):
