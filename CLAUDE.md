@@ -18,6 +18,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 - Segmented control **Job (n) | Add tests** (internally `filterSel` / `fSel`=Job, `fAll`=Add tests; stored in `fcp-filter` as `sel`/`all`); with Selected active, prev/next steps through selected tests only.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
 - **New job** (top bar): modal listing all tests with per-chapter Select all; **Start job** clears the previous job (selections, sign-offs, records), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
+- **Remarks** per test: free-text card above Performed on the procedure page (saved on input in `S.rem[id]`), shown in italics under the title in the list. New job clears them.
 - **PDF button** (top of each test, "PDF · 1-59"): full-screen view of the original PDF pages for that test (`pages/pNNN.png`, from the test's first page to the page where the next test starts). Pages are cached by the service worker in a separate cache `fcp-pages-1` (survives releases; bump it if the PDF changes), downloaded in the background after the page asks with `postMessage("cache-pages")`.
 - **Split view** in landscape ≥ 1000 px (iPad mini landscape 1024×768): list left (400 px), test right, each pane scrolls on its own, current test highlighted, no back button. Portrait = single view as before.
 - **Readability (display only, text stays verbatim):** `lineHtml()` shows menu paths (`HLTH→HUMS→…`) as chips, values with units (`105%`, `0.2 IPS`, `30 seconds`, `±1%`) bold, and ALL-CAPS switch/button names (`BATT – ON`, `EMER PWR`) bold mono. `docHtml()` groups sub-steps (a., b. …) under a left line, puts a divider between main steps, and folds 2+ consecutive NOTEs into one collapsed "NOTES (n)" box. WARNING/CAUTION are always shown. Procedure text is 1.15rem.
@@ -55,7 +56,7 @@ Parser notes: the PDF draws `±` and `″` with pi fonts (mapped in `FONT_MAP`);
 
 - **Safari 15**: no `color-mix()`, no `:has()`, no top-level `await`; keep JS ES2019-ish. Test on 768×1024.
 - One file, no build step at runtime, no JS libraries. Touch targets ≥ 44 px. No horizontal page scroll (tables scroll inside `.tablewrap`).
-- **Never rename localStorage keys** (data on iPads would be lost): `fcp-v1` (`{sel, done, rec}`), `fcp-collapsed` (`{chapterId: true}`), `fcp-filter`, `fcp-theme`. Unused, don't reuse: `fcp-signer`, `fcp-techs` (old technician feature). `done[id]` is `{at}`; older entries may also have `by`. Schema changes must stay backward compatible (see `tidy()`).
+- **Never rename localStorage keys** (data on iPads would be lost): `fcp-v1` (`{sel, done, rec, rem}`), `fcp-collapsed` (`{chapterId: true}`), `fcp-filter`, `fcp-theme`. Unused, don't reuse: `fcp-signer`, `fcp-techs` (old technician feature). `done[id]` is `{at}`; older entries may also have `by`. Schema changes must stay backward compatible (see `tidy()`).
 
 ## Test and release
 
