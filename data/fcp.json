@@ -586,6 +586,10 @@
      "n": "a",
      "text": "Verify all six white external emergency lights illuminate."
     }
+   ],
+   "pages": [
+    1,
+    1
    ]
   },
   {
@@ -634,6 +638,10 @@
      "n": "2",
      "text": "Repeat for #2 Engine."
     }
+   ],
+   "pages": [
+    1,
+    2
    ]
   },
   {
@@ -690,6 +698,10 @@
      "n": "c",
      "text": "Verify that the BATTERY TEST light extinguishes."
     }
+   ],
+   "pages": [
+    2,
+    2
    ]
   },
   {
@@ -902,6 +914,10 @@
      "n": "b",
      "text": "Verify that the beeping tone is silent."
     }
+   ],
+   "pages": [
+    2,
+    3
    ]
   },
   {
@@ -946,6 +962,10 @@
      "n": "3",
      "text": "Repeat for copilot’s position."
     }
+   ],
+   "pages": [
+    3,
+    4
    ]
   },
   {
@@ -978,6 +998,10 @@
      "n": "2",
      "text": "Repeat for copilot’s seat."
     }
+   ],
+   "pages": [
+    4,
+    4
    ]
   },
   {
@@ -1016,6 +1040,10 @@
      "n": "3",
      "text": "Repeat for copilot’s pedals."
     }
+   ],
+   "pages": [
+    4,
+    4
    ]
   },
   {
@@ -1066,6 +1094,10 @@
      "n": "2",
      "text": "Repeat for #2 ENGINE THROTTLE."
     }
+   ],
+   "pages": [
+    4,
+    5
    ]
   },
   {
@@ -1109,6 +1141,10 @@
      "n": "5",
      "text": "Verify that the two AHRS compass calibration cards are installed and filled out."
     }
+   ],
+   "pages": [
+    5,
+    5
    ]
   },
   {
@@ -1129,6 +1165,10 @@
      "n": "2",
      "text": "Verify that the helicopter can accept DC power."
     }
+   ],
+   "pages": [
+    5,
+    5
    ]
   },
   {
@@ -1213,6 +1253,10 @@
      "n": "b",
      "text": "Verify that only the #3 hydraulic pressure indicator is in the green range (if the ground pump is ON)."
     }
+   ],
+   "pages": [
+    5,
+    6
    ]
   },
   {
@@ -1275,6 +1319,10 @@
      "n": "4",
      "text": "Repeat for copilot position."
     }
+   ],
+   "pages": [
+    6,
+    6
    ]
   },
   {
@@ -1319,6 +1367,10 @@
      "n": "b",
      "text": "Verify that the ROTOR BRAKE caution light is extinguished."
     }
+   ],
+   "pages": [
+    6,
+    6
    ]
   },
   {
@@ -1411,6 +1463,10 @@
      "n": "10",
      "text": "If aircraft serial number is incorrect, enter the correct serial number as 920XXX (i.e., 920057) using INCR, DECR, LEFT, RIGHT and ENTER."
     }
+   ],
+   "pages": [
+    6,
+    7
    ]
   },
   {
@@ -1503,6 +1559,10 @@
      "n": "a",
      "text": "Verify that the timer resets to ″0000″."
     }
+   ],
+   "pages": [
+    7,
+    8
    ]
   },
   {
@@ -1535,6 +1595,10 @@
      "n": "a",
      "text": "Verify that the CONFIG page represents the actual configuration of the helicopter."
     }
+   ],
+   "pages": [
+    8,
+    8
    ]
   },
   {
@@ -1613,6 +1677,10 @@
      "n": "6",
      "text": "Initialize the FMS to the present location."
     }
+   ],
+   "pages": [
+    8,
+    9
    ]
   },
   {
@@ -1687,6 +1755,10 @@
      "n": "a",
      "text": "Verify appropriate displays are available on each MFD."
     }
+   ],
+   "pages": [
+    9,
+    9
    ]
   },
   {
@@ -1743,6 +1815,10 @@
      "n": "5",
      "text": "Repeat with the copilot’s MFD and Slew Controller."
     }
+   ],
+   "pages": [
+    9,
+    9
    ]
   },
   {
@@ -1907,6 +1983,10 @@
      "n": "11",
      "text": "Repeat for copilot Display Control Panel (DCP)."
     }
+   ],
+   "pages": [
+    9,
+    11
    ]
   },
   {
@@ -1987,6 +2067,10 @@
      "n": "b",
      "text": "Verify that the digital heading disappears in approximately 5 seconds."
     }
+   ],
+   "pages": [
+    11,
+    11
    ]
   },
   {
@@ -2115,6 +2199,10 @@
      "n": "a",
      "text": "Verify that DCU reversion annunciations are removed from the PFDs."
     }
+   ],
+   "pages": [
+    11,
+    12
    ]
   },
   {
@@ -2183,6 +2271,10 @@
      "n": "c",
      "text": "Verify that the inboard copilot MFD automatically changes to the PFD."
     }
+   ],
+   "pages": [
+    12,
+    13
    ]
   },
   {
@@ -2291,6 +2383,10 @@
      "n": "a",
      "text": "Verify that the above cautions are hidden."
     }
+   ],
+   "pages": [
+    13,
+    13
    ]
   },
   {
@@ -2341,6 +2437,10 @@
      "n": "3",
      "text": "Input the correct pilot, passenger and cargo weights."
     }
+   ],
+   "pages": [
+    13,
+    14
    ]
   },
   {
@@ -2439,6 +2539,10 @@
      "n": "5",
      "text": "Rotate the FIRE DET switch to NORM."
     }
+   ],
+   "pages": [
+    14,
+    15
    ]
   },
   {
@@ -2613,6 +2717,10 @@
      "n": "12",
      "text": "With only the #2 engine running and the main generators on line, repeat the test for APU and the #1 engine."
     }
+   ],
+   "pages": [
+    15,
+    16
    ]
   },
   {
@@ -2713,6 +2821,10 @@
      "n": "a",
      "text": "Verify that the left cabin ICS station monitors the right cabin audio selections."
     }
+   ],
+   "pages": [
+    16,
+    17
    ]
   },
   {
@@ -3262,6 +3374,10 @@
      "n": "6",
      "text": "Repeat for copilot’s utility light."
     }
+   ],
+   "pages": [
+    17,
+    22
    ]
   },
   {
@@ -3364,6 +3480,10 @@
      "n": "b",
      "text": "Verify that the OAT displayed on the EPAC page is ±1°C from the outside source."
     }
+   ],
+   "pages": [
+    22,
+    23
    ]
   },
   {
@@ -3402,6 +3522,10 @@
      "n": "3",
      "text": "Repeat for copilot position."
     }
+   ],
+   "pages": [
+    23,
+    23
    ]
   },
   {
@@ -3432,6 +3556,10 @@
      "n": "2",
      "text": "Retune the #1 radio to the desired frequency."
     }
+   ],
+   "pages": [
+    23,
+    23
    ]
   },
   {
@@ -3538,6 +3666,10 @@
      "n": "i",
      "text": "Verify that the TEST PASSED status is displayed on the HLTH page."
     }
+   ],
+   "pages": [
+    23,
+    24
    ]
   },
   {
@@ -3652,6 +3784,10 @@
      "n": "a",
      "text": "Verify that the CVR/FDR status changes to OPERATIONAL."
     }
+   ],
+   "pages": [
+    24,
+    25
    ]
   },
   {
@@ -3718,6 +3854,10 @@
      "n": "4",
      "text": "Repeat for RADALT 2, if installed."
     }
+   ],
+   "pages": [
+    25,
+    26
    ]
   },
   {
@@ -3786,6 +3926,10 @@
      "n": "d",
      "text": "Verify the HYDRAULIC status changes to OPERATIONAL."
     }
+   ],
+   "pages": [
+    26,
+    26
    ]
   },
   {
@@ -4089,6 +4233,10 @@
      "n": "a",
      "text": "The cyclic should contact the right cyclic stop."
     }
+   ],
+   "pages": [
+    26,
+    29
    ]
   },
   {
@@ -4217,6 +4365,10 @@
      "n": "a",
      "text": "Check for unusual binding or restrictions."
     }
+   ],
+   "pages": [
+    29,
+    30
    ]
   },
   {
@@ -4271,6 +4423,10 @@
      "n": "4",
      "text": "Select BST ON."
     }
+   ],
+   "pages": [
+    30,
+    30
    ]
   },
   {
@@ -4483,6 +4639,10 @@
      "n": "2",
      "text": "Check copilot’s cyclic and collective beeper trim for proper operation."
     }
+   ],
+   "pages": [
+    30,
+    32
    ]
   },
   {
@@ -4613,6 +4773,10 @@
      "n": "14",
      "text": "GND PUMP – OFF."
     }
+   ],
+   "pages": [
+    32,
+    33
    ]
   },
   {
@@ -4689,6 +4853,10 @@
      "n": "a",
      "text": "Verify that the wipers park parallel to the windshield inboard edge and about 1 inch from the edge."
     }
+   ],
+   "pages": [
+    33,
+    34
    ]
   },
   {
@@ -4747,6 +4915,10 @@
      "n": "4",
      "text": "Select PITOT HT CPLT, PLT and STBY switches OFF."
     }
+   ],
+   "pages": [
+    34,
+    34
    ]
   },
   {
@@ -4831,6 +5003,10 @@
      "n": "7",
      "text": "Repeat for cockpit."
     }
+   ],
+   "pages": [
+    34,
+    36
    ]
   },
   {
@@ -5029,6 +5205,10 @@
      "n": "6",
      "text": "Repeat for the #2 engine."
     }
+   ],
+   "pages": [
+    36,
+    37
    ]
   },
   {
@@ -5185,6 +5365,10 @@
      "n": "11",
      "text": "Repeat for #2 engine."
     }
+   ],
+   "pages": [
+    37,
+    39
    ]
   },
   {
@@ -5293,6 +5477,10 @@
      "n": "13",
      "text": "Repeat for other engine."
     }
+   ],
+   "pages": [
+    39,
+    40
    ]
   },
   {
@@ -5395,6 +5583,10 @@
      "n": "12",
      "text": "Repeat for other engine."
     }
+   ],
+   "pages": [
+    40,
+    41
    ]
   },
   {
@@ -5443,6 +5635,10 @@
      "n": "e",
      "text": "Verify that all servo pressure caution lights are extinguished."
     }
+   ],
+   "pages": [
+    41,
+    42
    ]
   },
   {
@@ -5511,6 +5707,10 @@
      "n": "a",
      "text": "Verify caution lights extinguish."
     }
+   ],
+   "pages": [
+    42,
+    42
    ]
   },
   {
@@ -5561,6 +5761,10 @@
      "n": "f",
      "text": "Verify that #1 and #2 torques are matched within 5%."
     }
+   ],
+   "pages": [
+    42,
+    42
    ]
   },
   {
@@ -5625,6 +5829,10 @@
      "n": "a",
      "text": "Verify that the MGB MAN COOL caution light extinguishes."
     }
+   ],
+   "pages": [
+    42,
+    43
    ]
   },
   {
@@ -5671,6 +5879,10 @@
      "n": "5",
      "text": "Have maintenance conduct visual leak check."
     }
+   ],
+   "pages": [
+    43,
+    44
    ]
   },
   {
@@ -5725,6 +5937,10 @@
      "n": "7",
      "text": "Repeat for the other engine."
     }
+   ],
+   "pages": [
+    44,
+    44
    ]
   },
   {
@@ -5941,6 +6157,10 @@
      "n": "30",
      "text": "Procedure complete."
     }
+   ],
+   "pages": [
+    44,
+    46
    ]
   },
   {
@@ -6241,6 +6461,10 @@
      "n": "3",
      "text": "Select DC CONV NO. 1 and 2 – ON."
     }
+   ],
+   "pages": [
+    46,
+    49
    ]
   },
   {
@@ -6323,6 +6547,10 @@
      "n": "8",
      "text": "Place the ANTI-ICE WDSHLD PLT and CPLT switches to the OFF position."
     }
+   ],
+   "pages": [
+    49,
+    50
    ]
   },
   {
@@ -6413,6 +6641,10 @@
      "n": "7",
      "text": "Repeat for AP 2 and SAS 2."
     }
+   ],
+   "pages": [
+    50,
+    51
    ]
   },
   {
@@ -6479,6 +6711,10 @@
      "n": "d",
      "text": "Verify that the AVC status changes to OPERATIONAL."
     }
+   ],
+   "pages": [
+    51,
+    51
    ]
   },
   {
@@ -6651,6 +6887,10 @@
      "n": "9",
      "text": "For subsequent data runs, perform a crew change, remove the HDC, and remove power from the HUMS for 5 minutes."
     }
+   ],
+   "pages": [
+    51,
+    53
    ]
   },
   {
@@ -6715,6 +6955,10 @@
       ]
      ]
     }
+   ],
+   "pages": [
+    53,
+    54
    ]
   },
   {
@@ -6937,6 +7181,10 @@
       ]
      ]
     }
+   ],
+   "pages": [
+    54,
+    56
    ]
   },
   {
@@ -7001,6 +7249,10 @@
      "n": "6",
      "text": "Repeat for #2 Engine using the RIGHT MOD MD."
     }
+   ],
+   "pages": [
+    56,
+    57
    ]
   },
   {
@@ -7049,6 +7301,10 @@
      "n": "3",
      "text": "Repeat for #2 engine."
     }
+   ],
+   "pages": [
+    57,
+    57
    ]
   },
   {
@@ -7213,6 +7469,10 @@
      "n": "a",
      "text": "Verify that the ARM light extinguishes."
     }
+   ],
+   "pages": [
+    57,
+    59
    ]
   },
   {
@@ -7269,6 +7529,10 @@
      "n": "a",
      "text": "Verify that the DOOR OPEN advisory light extinguishes."
     }
+   ],
+   "pages": [
+    59,
+    59
    ]
   },
   {
@@ -7341,6 +7605,10 @@
      "n": "b",
      "text": "Verify that the RAMP OPEN advisory light extinguishes when the ramp is closed."
     }
+   ],
+   "pages": [
+    59,
+    60
    ]
   },
   {
@@ -7383,6 +7651,10 @@
      "n": "a",
      "text": "Verify that the rotor brake will hold with both engines at IDLE."
     }
+   ],
+   "pages": [
+    60,
+    60
    ]
   },
   {
@@ -7482,6 +7754,10 @@
      "n": "2",
      "text": "If a system cannot be made OPERATIONAL, select SUB STAT and note the status and the fault code of the inoperative subsystem."
     }
+   ],
+   "pages": [
+    60,
+    61
    ]
   },
   {
@@ -7640,6 +7916,10 @@
      "n": "16",
      "text": "Set the NO. 1 throttle to FLY."
     }
+   ],
+   "pages": [
+    61,
+    63
    ]
   },
   {
@@ -7786,6 +8066,10 @@
      "n": "11",
      "text": "Repeat for #2 engine and the copilot OEI collective switch."
     }
+   ],
+   "pages": [
+    63,
+    64
    ]
   },
   {
@@ -7830,6 +8114,10 @@
      "n": "4",
      "text": "Record any exceedance."
     }
+   ],
+   "pages": [
+    64,
+    64
    ]
   },
   {
@@ -7868,6 +8156,10 @@
      "n": "3",
      "text": "Select exceedance and record details of any Exceedance Message except COLD START."
     }
+   ],
+   "pages": [
+    64,
+    65
    ]
   },
   {
@@ -7944,6 +8236,10 @@
      "n": "b",
      "text": "Verify that the brake system efficiently stops the helicopter."
     }
+   ],
+   "pages": [
+    65,
+    66
    ]
   },
   {
@@ -8157,6 +8453,10 @@
       ]
      ]
     }
+   ],
+   "pages": [
+    66,
+    67
    ]
   },
   {
@@ -8243,6 +8543,10 @@
      "n": "d",
      "text": "Verify that the transient Nr droop is 1% or less."
     }
+   ],
+   "pages": [
+    67,
+    68
    ]
   },
   {
@@ -8303,6 +8607,10 @@
      "n": "g",
      "text": "Verify that both airspeed indicators on PFD and backup airspeed indicator read zero plus wind speed."
     }
+   ],
+   "pages": [
+    68,
+    69
    ]
   },
   {
@@ -8341,6 +8649,10 @@
      "n": "b",
      "text": "Verify that the left pedal is 1½″ ±¾″ forward of the right pedal."
     }
+   ],
+   "pages": [
+    69,
+    69
    ]
   },
   {
@@ -8389,6 +8701,10 @@
      "n": "b",
      "text": "Verify that the standby compass is within ±10° of the actual magnetic heading."
     }
+   ],
+   "pages": [
+    69,
+    70
    ]
   },
   {
@@ -8896,6 +9212,10 @@
      "n": "14",
      "text": "Repeat on the copilot’s side using the copilot’s PFD, HDG TRIM switch, cyclic FD standby button, collective beeper and MODE SEL panel."
     }
+   ],
+   "pages": [
+    70,
+    75
    ]
   },
   {
@@ -8940,6 +9260,10 @@
      "n": "4",
      "text": "Check the VSI and altimeters for smooth operation."
     }
+   ],
+   "pages": [
+    75,
+    75
    ]
   },
   {
@@ -9128,6 +9452,10 @@
      "n": "13",
      "text": "The maximum allowable difference between actual and chart Nr value is ±3%."
     }
+   ],
+   "pages": [
+    75,
+    77
    ]
   },
   {
@@ -9172,6 +9500,10 @@
      "n": "b",
      "text": "Verify that the landing gear position lights illuminate green."
     }
+   ],
+   "pages": [
+    77,
+    77
    ]
   },
   {
@@ -9252,6 +9584,10 @@
      "n": "a",
      "text": "Verify data logged on EPAC page."
     }
+   ],
+   "pages": [
+    77,
+    78
    ]
   },
   {
@@ -10284,6 +10620,10 @@
      "n": "a",
      "text": "Confirm the ″DECOUPLE″ aural alert is heard."
     }
+   ],
+   "pages": [
+    78,
+    87
    ]
   },
   {
@@ -10524,6 +10864,10 @@
      "n": "e",
      "text": "Verify that approximately 7 seconds after the initial aural alert, a second ″CAUTION OBSTACLE″ aural warning is heard."
     }
+   ],
+   "pages": [
+    87,
+    89
    ]
   },
   {
@@ -10606,6 +10950,10 @@
      "n": "a",
      "text": "Verify at least two inches of forward cyclic remain between the cyclic and the instrument panel."
     }
+   ],
+   "pages": [
+    89,
+    90
    ]
   },
   {
@@ -10789,6 +11137,10 @@
      "n": "e",
      "text": "If possible, verify that the MFD displays TRAFFIC when an intruder aircraft is near and closing."
     }
+   ],
+   "pages": [
+    90,
+    91
    ]
   },
   {
@@ -11251,6 +11603,10 @@
      "n": "b",
      "text": "Confirm EICAS FLOAT ARMED advisory or caution extinguished."
     }
+   ],
+   "pages": [
+    91,
+    96
    ]
   },
   {
@@ -11565,6 +11921,10 @@
      "n": "a",
      "text": "Confirm both ARM light and the MFD RAFT ARM cautions are extinguished."
     }
+   ],
+   "pages": [
+    96,
+    98
    ]
   },
   {
@@ -11861,6 +12221,10 @@
      "n": "13",
      "text": "For dual hoist installation: repeat steps 2. – 11. above."
     }
+   ],
+   "pages": [
+    98,
+    101
    ]
   },
   {
@@ -11957,6 +12321,10 @@
      "n": "8",
      "text": "Repeat using the manual cargo release lever located on the cargo hook assembly."
     }
+   ],
+   "pages": [
+    101,
+    102
    ]
   },
   {
@@ -12057,6 +12425,10 @@
      "n": "c",
      "text": "Verify that the RIPS system status changes to OPERATIONAL."
     }
+   ],
+   "pages": [
+    102,
+    103
    ]
   },
   {
@@ -12231,6 +12603,10 @@
      "n": "a",
      "text": "Verify that the TGT disappears."
     }
+   ],
+   "pages": [
+    103,
+    104
    ]
   },
   {
@@ -12351,6 +12727,10 @@
      "n": "g",
      "text": "Verify that the LSS status returns to OPERATIONAL."
     }
+   ],
+   "pages": [
+    104,
+    106
    ]
   },
   {
@@ -12463,6 +12843,10 @@
      "n": "13",
      "text": "Repeat for the copilot’s side."
     }
+   ],
+   "pages": [
+    106,
+    107
    ]
   },
   {
@@ -13174,6 +13558,10 @@
      "n": "12",
      "text": "Repeat the entire procedure using AP1, FD1, and the copilot cyclic beeper."
     }
+   ],
+   "pages": [
+    107,
+    112
    ]
   },
   {
@@ -13428,6 +13816,10 @@
      "n": "21",
      "text": "Repeat with AP1, FD 1, copilot’s DCP and copilot’s MSP."
     }
+   ],
+   "pages": [
+    112,
+    114
    ]
   }
  ],
@@ -13452,5 +13844,121 @@
    "title": "Autorotation RPM Correction Chart - 20%",
    "src": "figures/fig4.png"
   }
- ]
+ ],
+ "pageLabels": {
+  "1": "1-8",
+  "2": "1-9",
+  "3": "1-10",
+  "4": "1-11",
+  "5": "1-12",
+  "6": "1-13",
+  "7": "1-14",
+  "8": "1-15",
+  "9": "1-16",
+  "10": "1-17",
+  "11": "1-18",
+  "12": "1-19",
+  "13": "1-20",
+  "14": "1-21",
+  "15": "1-22",
+  "16": "1-23",
+  "17": "1-24",
+  "18": "1-25",
+  "19": "1-26",
+  "20": "1-27",
+  "21": "1-28",
+  "22": "1-29",
+  "23": "1-30",
+  "24": "1-31",
+  "25": "1-32",
+  "26": "1-33",
+  "27": "1-34",
+  "28": "1-35",
+  "29": "1-36",
+  "30": "1-37",
+  "31": "1-38",
+  "32": "1-39",
+  "33": "1-40",
+  "34": "1-41",
+  "35": "1-42",
+  "36": "1-43",
+  "37": "1-44",
+  "38": "1-45",
+  "39": "1-46",
+  "40": "1-47",
+  "41": "1-48",
+  "42": "1-49",
+  "43": "1-50",
+  "44": "1-51",
+  "45": "1-52",
+  "46": "1-53",
+  "47": "1-54",
+  "48": "1-55",
+  "49": "1-56",
+  "50": "1-57",
+  "51": "1-58",
+  "52": "1-59",
+  "53": "1-60",
+  "54": "1-61",
+  "55": "1-62",
+  "56": "1-63",
+  "57": "1-64",
+  "58": "1-65",
+  "59": "1-66",
+  "60": "1-67",
+  "61": "1-68",
+  "62": "1-69",
+  "63": "1-70",
+  "64": "1-71",
+  "65": "1-72",
+  "66": "1-73",
+  "67": "1-74",
+  "68": "1-75",
+  "69": "1-76",
+  "70": "1-77",
+  "71": "1-78",
+  "72": "1-79",
+  "73": "1-80",
+  "74": "1-81",
+  "75": "1-82",
+  "76": "1-83",
+  "77": "1-84",
+  "78": "1-85",
+  "79": "1-86",
+  "80": "1-87",
+  "81": "1-88",
+  "82": "1-89",
+  "83": "1-90",
+  "84": "1-91",
+  "85": "1-92",
+  "86": "1-93",
+  "87": "1-94",
+  "88": "1-95",
+  "89": "1-96",
+  "90": "1-97",
+  "91": "1-98",
+  "92": "1-99",
+  "93": "1-100",
+  "94": "1-101",
+  "95": "1-102",
+  "96": "1-103",
+  "97": "1-104",
+  "98": "1-105",
+  "99": "1-106",
+  "100": "1-107",
+  "101": "1-108",
+  "102": "1-109",
+  "103": "1-110",
+  "104": "1-111",
+  "105": "1-112",
+  "106": "1-113",
+  "107": "1-114",
+  "108": "1-115",
+  "109": "1-116",
+  "110": "1-117",
+  "111": "1-118",
+  "112": "1-119",
+  "113": "1-120",
+  "114": "1-121"
+ }
 }
