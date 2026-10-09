@@ -382,7 +382,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
   function statusHtml(id, home) {
     var d = S.done[id];
     if (!d && home && !S.sel[id]) return "";
-    if (d) return '<button type="button" class="signed" data-sign="' + id + '">✓ Signed off<small>' + esc(stamp(d.at)) + '</small></button>';
+    if (d) return '<button type="button" class="signed" data-sign="' + id + '">✓ Performed<small>' + esc(stamp(d.at)) + '</small></button>';
     return '<button type="button" class="sign' + (home ? "" : " primary") + (S.sel[id] ? "" : " off") + '" data-sign="' + id + '">Sign off</button>';
   }
   function recSummary() {
@@ -623,7 +623,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
   function askUnsign(id, then) {
     var d = S.done[id];
     openModal(secTitle(id),
-      '<p>Signed off ' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '.</p><p>Remove the sign-off' + (then ? ' and deselect the test' : '') + '?</p>',
+      '<p>Performed ' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '.</p><p>Remove the sign-off' + (then ? ' and deselect the test' : '') + '?</p>',
       '<button type="button" data-act="cancel">Keep</button><button type="submit" class="danger">Remove</button>',
       function () { delete S.done[id]; if (then) then(); save(); refresh(); });
   }

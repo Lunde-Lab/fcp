@@ -12,7 +12,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 ## What the app does
 
 - **Front page** = PDF pages 120–122 (chapters 1.0–5.0, items 1.1 … 5.11). PDF page 119 (header form) is intentionally dropped.
-- Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Sign off**; one tap signs it off (time stored) and it shows **✓ Signed off** + time. A signed-off task is struck through with reduced opacity. Tapping "✓ Signed off" offers to remove the sign-off.
+- Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Sign off**; one tap signs it off (time stored) and it shows **✓ Performed** + time. A signed-off task is struck through with reduced opacity. Tapping "✓ Performed" offers to remove the sign-off.
 - Chapters collapse by tapping the header; **3.0 and 4.0 are collapsed by default**. Returning from a procedure opens its chapter.
 - **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next and **Sign off** – the only Sign off on the page (always reachable). Bottom: Remarks, prev/next. No selected toggle: if the test is not in the job, Sign off is greyed out and tapping it asks "Add it to the job?" (adds only; tap Sign off again).
 - Segmented control **Job (n) | Add tests** (internally `filterSel` / `fSel`=Job, `fAll`=Add tests; stored in `fcp-filter` as `sel`/`all`); with Selected active, prev/next steps through selected tests only.
@@ -29,7 +29,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 
 - No selected/performed/remaining counter card on the front page (removed on request).
 - No export/Share summary (removed on request).
-- No technician/initials – the button is **Sign off** (one tap), done state **✓ Signed off** (not "Performed"/"SAT"). Signed-off tasks are struck through and the whole row has reduced opacity.
+- No technician/initials – the button is **Sign off** (one tap), done state **✓ Performed** + time (not "Signed off"/"SAT"). Signed-off tasks are struck through and the whole row has reduced opacity.
 - Sign off only once on the procedure page: in the top bar (no second button at the bottom).
 - **All** view is only for picking tests: checkboxes, no Sign off buttons/status (signed-off rows are still struck through). **Selected** view has no checkboxes (deselect only from All); Sign off lives there and in the procedure page top bar.
 - No bar title/progress text ("S-92A FCP / x of y performed") and no disclaimer line on the front page.
