@@ -184,22 +184,14 @@ details.notes p + p { margin-top: 8px; padding-top: 8px; border-top: 1px solid r
 .remcard textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .go .t small.rem { font-family: var(--font-ui); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .recsum { font-family: var(--font-data); font-size: .78rem; color: var(--muted); font-weight: 500; }
-.signcard { padding: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; }
-.signcard .who { display: flex; flex-direction: column; gap: 2px; }
-.signcard .who b { font-size: 1.1rem; }
-.signcard .who small { font-family: var(--font-data); font-size: .85rem; color: var(--muted); }
-.signcard.done { border-color: rgba(var(--good-rgb), .55); background: rgba(var(--good-rgb), .1); }
-.signcard.done .who b { color: var(--good); }
-.bigsign { min-height: 46px; padding: 8px 22px; font-size: 1rem; }
 .pn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pn button { min-height: 56px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; text-align: left; padding: 8px 14px; min-width: 0; }
 .pn button.nx { align-items: flex-end; text-align: right; }
 .pn button small { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
 .pn button span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
 .pn button span b { font-family: var(--font-data); color: var(--accent); margin-right: 6px; }
-/* Ikke valgt test: Performed er grå, trykk spør om den skal legges til jobben */
+/* Ikke valgt test: Sign off er grå, trykk spør om den skal legges til jobben */
 button.off, button.primary.off { background: var(--panel2); border-color: var(--line); color: var(--muted); }
-.signrow { display: flex; justify-content: flex-end; }
 
 /* Modal */
 .modal { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.55); display: flex; align-items: flex-end; justify-content: center; padding: 12px; padding-bottom: max(12px, env(safe-area-inset-bottom, 0px)); }
@@ -302,7 +294,6 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       <article class="card doc" id="doc"></article>
       <div id="recCard"></div>
       <div class="card remcard"><label for="remText">Remarks</label><textarea id="remText" rows="3" placeholder="Values, findings, actions …"></textarea></div>
-      <div id="signCard"></div>
       <div class="pn"><button type="button" id="prev2"></button><button type="button" class="nx" id="next2"></button></div>
     </div>
     <div class="secempty" id="secEmpty" hidden>Tap a test in the list to open it.</div>
@@ -391,8 +382,8 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
   function statusHtml(id, home) {
     var d = S.done[id];
     if (!d && home && !S.sel[id]) return "";
-    if (d) return '<button type="button" class="signed" data-sign="' + id + '">✓ Performed<small>' + esc(stamp(d.at)) + '</small></button>';
-    return '<button type="button" class="sign' + (S.sel[id] ? "" : " off") + '" data-sign="' + id + '">Performed</button>';
+    if (d) return '<button type="button" class="signed" data-sign="' + id + '">✓ Signed off<small>' + esc(stamp(d.at)) + '</small></button>';
+    return '<button type="button" class="sign' + (home ? "" : " primary") + (S.sel[id] ? "" : " off") + '" data-sign="' + id + '">Sign off</button>';
   }
   function recSummary() {
     var it = SEC["4.2"].item, r = S.rec["4.2"] || {}, parts = [];
@@ -594,19 +585,16 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
     save();
   });
   $("remText").addEventListener("change", function () { if (isSplit()) refresh(); });
+  // Sign off finnes bare i topplinjen på testen (alltid synlig)
   function renderSignParts(id) {
-    var d = S.done[id];
     $("barSign").innerHTML = statusHtml(id);
-    $("signCard").innerHTML = d
-      ? '<div class="card signcard done"><div class="who"><b>✓ Performed</b><small>' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '</small></div><button type="button" data-sign="' + id + '">Undo</button></div>'
-      : '<div class="signrow"><button type="button" class="primary bigsign' + (S.sel[id] ? "" : " off") + '" data-sign="' + id + '">Performed</button></div>';
   }
+
 
   function onSecClick(e) {
     var b = e.target.closest("button"); if (!b) return;
     if (b.dataset.sign) openSign(b.dataset.sign);
   }
-  $("signCard").addEventListener("click", onSecClick);
   $("barSign").addEventListener("click", onSecClick);
   ["prevBtn", "nextBtn", "prev2", "next2"].forEach(function (k) {
     $(k).addEventListener("click", function () { if (this.dataset.go) { navReplace = true; location.replace("#/" + this.dataset.go); } });
@@ -630,12 +618,12 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       return;
     }
     S.done[id] = { at: new Date().toISOString() };
-    save(); refresh(); toast(id + " performed");
+    save(); refresh(); toast(id + " signed off");
   }
   function askUnsign(id, then) {
     var d = S.done[id];
     openModal(secTitle(id),
-      '<p>Performed ' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '.</p><p>Mark as not performed' + (then ? ' and deselect the test' : '') + '?</p>',
+      '<p>Signed off ' + esc(fmtDate(d.at)) + ' ' + esc(fmtTime(d.at)) + '.</p><p>Remove the sign-off' + (then ? ' and deselect the test' : '') + '?</p>',
       '<button type="button" data-act="cancel">Keep</button><button type="submit" class="danger">Remove</button>',
       function () { delete S.done[id]; if (then) then(); save(); refresh(); });
   }

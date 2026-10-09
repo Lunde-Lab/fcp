@@ -61,9 +61,9 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   ok(await pg.locator('.row').count() === 2, 'Selected filter shows 2 rows');
   ok(await pg.locator('#chapters .chk').count() === 0, 'No checkboxes in Selected view');
   ok(await pg.locator('#barSum').count() === 0 && !(await pg.textContent('body')).includes('Not verified'), 'Bar title/summary and disclaimer removed');
-  ok((await pg.textContent('#row-1\\.1 .sign')) === 'Performed', 'Button is named Performed');
+  ok((await pg.textContent('#row-1\\.1 .sign')) === 'Sign off', 'Button is named Sign off');
   await pg.click('#row-1\\.1 .sign');
-  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('Performed'), '1.1 performed with one tap');
+  ok(!(await pg.isVisible('#signModal')) && (await pg.textContent('#row-1\\.1 .signed')).includes('✓ Signed off'), '1.1 signed off with one tap');
   const deco = await pg.$eval('#row-1\\.1 .go .t', e => getComputedStyle(e).textDecorationLine);
   const op = await pg.$eval('#row-1\\.1', e => +getComputedStyle(e).opacity);
   ok(deco.includes('line-through') && op < 1, 'Performed task is struck through with reduced opacity');
@@ -77,13 +77,14 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
 
   // Sign from section page with one tap
   await pg.click('#row-1\\.2 .go');
-  await pg.waitForSelector('#signCard .bigsign');
-  await pg.click('#signCard .bigsign');
-  ok((await pg.textContent('#signCard')).includes('✓ Performed'), 'Section page Performed with one tap');
+  await pg.waitForSelector('#barSign .sign');
+  ok(await pg.locator('#signCard, .bigsign').count() === 0, 'No second Sign off at the bottom');
+  await pg.click('#barSign .sign');
+  ok((await pg.textContent('#barSign')).includes('✓ Signed off'), 'Top bar Sign off with one tap');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/sec-1.2-signed.png' });
 
   // Undo sign-off
-  await pg.click('#signCard button[data-sign]');
+  await pg.click('#barSign button[data-sign]');
   await pg.click('#smBtns .danger');
   ok(!(await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')).done['1.2'])), 'Sign-off removed');
 
@@ -119,16 +120,16 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
 
   // Not-selected test: no Selected toggle, grey Performed asks to add to Selected
   await pg.goto(URL + '#/1.7');
-  await pg.waitForSelector('#signCard .bigsign');
+  await pg.waitForSelector('#barSign .sign');
   ok(await pg.locator('#secSel').count() === 0, 'No "Selected for this FCP" toggle');
-  ok(await pg.locator('#signCard .bigsign.off').count() === 1, 'Performed greyed out when not selected');
-  await pg.click('#signCard .bigsign');
+  ok(await pg.locator('#barSign .sign.off').count() === 1, 'Sign off greyed out when not selected');
+  await pg.click('#barSign .sign');
   ok(await pg.isVisible('#signModal') && (await pg.textContent('#smBody')).includes('Add it to the job'), 'Tap asks to add to Selected');
   await pg.click('#smBtns .primary');
   ok(await pg.evaluate(() => { const o = JSON.parse(localStorage.getItem('fcp-v1')); return o.sel['1.7'] && !o.done['1.7']; }), '1.7 added to Selected, not performed yet');
-  ok(await pg.locator('#signCard .bigsign.off').count() === 0, 'Performed active after adding');
-  await pg.click('#signCard .bigsign');
-  ok((await pg.textContent('#signCard')).includes('✓ Performed'), '1.7 performed');
+  ok(await pg.locator('#barSign .sign.off').count() === 0, 'Sign off active after adding');
+  await pg.click('#barSign .sign');
+  ok((await pg.textContent('#barSign')).includes('✓ Signed off'), '1.7 signed off');
   if (SHOTS) await pg.screenshot({ path: SHOTS + '/sec-1.7.png' });
 
   // 4.2 has record fields + figures
