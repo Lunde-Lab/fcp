@@ -12,26 +12,27 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 ## What the app does
 
 - **Front page** = PDF pages 120–122 (chapters 1.0–5.0, items 1.1 … 5.11). PDF page 119 (header form) is intentionally dropped.
-- Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Performed**; one tap marks it performed (time stored). A performed task is struck through with reduced opacity. Tapping "✓ Performed" offers to undo it.
+- Item number/title is a link to the procedure (`#/1.1`). Checkbox = selected for this FCP. Selected rows get **Sign off**; one tap signs it off (time stored) and it shows **✓ Signed off** + time. A signed-off task is struck through with reduced opacity. Tapping "✓ Signed off" offers to remove the sign-off.
 - Chapters collapse by tapping the header; **3.0 and 4.0 are collapsed by default**. Returning from a procedure opens its chapter.
-- **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next, sign status. Bottom: **Performed**, prev/next. No selected toggle on the procedure page: if the test is not selected, Performed is greyed out and tapping it asks "Add it to the job?" (adds only; tap Performed again to mark it).
+- **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next and **Sign off** – the only Sign off on the page (always reachable). Bottom: Remarks, prev/next. No selected toggle: if the test is not in the job, Sign off is greyed out and tapping it asks "Add it to the job?" (adds only; tap Sign off again).
 - Segmented control **Job (n) | Add tests** (internally `filterSel` / `fSel`=Job, `fAll`=Add tests; stored in `fcp-filter` as `sel`/`all`); with Selected active, prev/next steps through selected tests only.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
 - **New job** (top bar): modal listing all tests with per-chapter Select all; **Start job** clears the previous job (selections, sign-offs, records), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
-- **Remarks** per test: free-text card above Performed on the procedure page (saved on input in `S.rem[id]`), shown in italics under the title in the list. New job clears them.
+- **Remarks** per test: free-text card on the procedure page (saved on input in `S.rem[id]`), shown in italics under the title in the list. New job clears them.
 - **PDF button** (top of each test, "PDF · 1-59"): full-screen view of the original PDF pages for that test (`pages/pNNN.png`, from the test's first page to the page where the next test starts). Pages are cached by the service worker in a separate cache `fcp-pages-1` (survives releases; bump it if the PDF changes), downloaded in the background after the page asks with `postMessage("cache-pages")`.
 - **Split view** in landscape ≥ 1000 px (iPad mini landscape 1024×768): list left (400 px), test right, each pane scrolls on its own, current test highlighted, no back button. Portrait = single view as before.
 - **Readability (display only, text stays verbatim):** `lineHtml()` shows menu paths (`HLTH→HUMS→…`) as chips, values with units (`105%`, `0.2 IPS`, `30 seconds`, `±1%`) bold, and ALL-CAPS switch/button names (`BATT – ON`, `EMER PWR`) bold mono. `docHtml()` groups sub-steps (a., b. …) under a left line, puts a divider between main steps, and folds 2+ consecutive NOTEs into one collapsed "NOTES (n)" box. WARNING/CAUTION are always shown. Procedure text is 1.15rem.
 
 ## Behaviour André has decided (don't undo without asking)
 
-- UI names: **Job** (the selected tests, where Performed is done) and **Add tests** (all tests, only for ticking). Below, "Selected" = Job and "All" = Add tests.
+- UI names: **Job** (the selected tests, where tests are signed off) and **Add tests** (all tests, only for ticking). Below, "Selected" = Job and "All" = Add tests.
 
 - No selected/performed/remaining counter card on the front page (removed on request).
 - No export/Share summary (removed on request).
-- No technician/initials – the button is just **Performed** (one tap). Performed tasks are struck through and the whole row (incl. background and Performed button) has reduced opacity.
-- **All** view is only for picking tests: checkboxes, no Performed buttons/status (performed rows are still struck through). **Selected** view has no checkboxes (deselect only from All); Performed lives there and on the procedure page.
-- Procedure page Performed button is normal size, right-aligned (no card) until performed. No bar title/progress text ("S-92A FCP / x of y performed") and no disclaimer line on the front page.
+- No technician/initials – the button is **Sign off** (one tap), done state **✓ Signed off** (not "Performed"/"SAT"). Signed-off tasks are struck through and the whole row has reduced opacity.
+- Sign off only once on the procedure page: in the top bar (no second button at the bottom).
+- **All** view is only for picking tests: checkboxes, no Sign off buttons/status (signed-off rows are still struck through). **Selected** view has no checkboxes (deselect only from All); Sign off lives there and in the procedure page top bar.
+- No bar title/progress text ("S-92A FCP / x of y performed") and no disclaimer line on the front page.
 - A new job starts by picking tests in the New job modal; after that only the selected tests are shown (All/Selected segmented control to add more).
 
 ## Files
