@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <title>S-92 FCP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
 /* Design: samme tokens som ground-run. Tilpasset iPad mini 4 (768 × 1024, Safari 15) */
 :root {
@@ -31,6 +31,7 @@
   --accent-rgb: 0,127,148; --good-rgb: 20,147,92; --warn-rgb: 201,122,0; --crit-rgb: 208,43,43; --muted-rgb: 86,103,114;
   --fig-filter: none;
   --font-ui: "Barlow", system-ui, sans-serif;
+  --font-read: "Atkinson Hyperlegible", system-ui, sans-serif; /* prosedyretekst: tydelig 0/O, 1/l/I */
   --font-data: "JetBrains Mono", ui-monospace, Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
@@ -129,6 +130,9 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 
 /* Prosedyreside */
 .doc { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 12px; font-size: 1.15rem; line-height: 1.55; }
+.doc { font-family: var(--font-read); }
+.doc h1, .doc h3, .doc .ch, .doc .pdfbtn, .doc .adm > b, .doc summary b, .doc summary span { font-family: var(--font-ui); }
+.remcard textarea { font-family: var(--font-read); }
 .doc .ch { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; margin: 0; }
 .doc h1 { display: flex; gap: 12px; align-items: baseline; font-size: 1.5rem; }
 .doc h1 span { font-family: var(--font-data); color: var(--accent); }
