@@ -32,6 +32,10 @@ ADMON = ("WARNING", "CAUTION", "NOTE")
 COL_GAP = 9          # pt; wider gaps than this split a line into table cells
 # Steps where the PDF lacks the dot after the label ("a Verify ...", "5 Repeat ...")
 LOOSE_RE = [(2, re.compile(r"^([a-z])\s+([A-Z][a-z]+\b.*)$")), (1, re.compile(r"^(\d{1,2})\s+([A-Z][a-z]+\b.*)$"))]
+# Fractions are typeset as small digits around a fraction slash: "1" "⁄" "2" (6 pt) -> "½"
+VULGAR = {"1⁄2": "½", "1⁄4": "¼", "3⁄4": "¾"}
+# Known typos in the PDF, corrected on request (André): (section, wrong, right)
+ERRATA = [("4.1", "agreement with the PDFs.", "agreement with the PFDs.")]
 LIGATURES = {"\ufb00": "ff", "\ufb01": "fi", "\ufb02": "fl", "\ufb03": "ffi", "\ufb04": "ffl"}
 
 
@@ -69,10 +73,13 @@ def page_lines(page):
                     cells.append((cx, prev["x1"], cur)); cur = ""; cx = c["x0"]
                 elif gap > 0.12 * size:
                     cur += " "
-            cur += fix_char(c)
+            ch = fix_char(c)
+            if ch.isdigit() and c["size"] < 0.8 * size:
+                ch = "\x01" + ch + "\x02"     # small (fraction) digit
+            cur += ch
             prev = c
         cells.append((cx, prev["x1"], cur))
-        cells = [(x0, x1, re.sub(r"\s+", " ", t).strip()) for x0, x1, t in cells]
+        cells = [(x0, x1, re.sub(r"\s+", " ", fractions(t)).strip()) for x0, x1, t in cells]
         text = " ".join(t for _, _, t in cells)
         top_font = fonts[0] if fonts else ""
         out.append({
@@ -81,6 +88,11 @@ def page_lines(page):
             "text": text, "cells": cells,
         })
     return out
+
+
+def fractions(t):
+    t = re.sub(r"\x01(\d)\x02⁄\x01(\d)\x02", lambda m: VULGAR.get(m.group(1) + "⁄" + m.group(2), m.group(0)), t)
+    return t.replace("\x01", "").replace("\x02", "")
 
 
 def tidy(t):
@@ -107,6 +119,7 @@ def parse_procedures(pdf):
     last_top = None
     admon = None        # {"x": body x0}
     last_step, step_pos, last_n1 = None, (0, 0), 0
+    p_pos = {}          # id(p block) -> (page, x0), for nested list items
 
     def target():
         return sec["blocks"] if sec is not None else chapters[chap]["blocks"]
@@ -196,10 +209,22 @@ def parse_procedures(pdf):
             tb = target()
             if tb and tb[-1]["t"] == "p" and "lvl" in tb[-1]:
                 cur["lvl"] = tb[-1]["lvl"]
+                # nested list items (2.25: AFCS 1/AFCS 2 under AFCS): indent relative to the item above on the same page
+                ppn, px = p_pos[id(tb[-1])]
+                if ppn == pn and ln["x0"] > px + 6:
+                    cur["lvl"] += 1
+                elif ppn == pn and ln["x0"] < px - 6:
+                    for b in reversed(tb):
+                        if b["t"] != "p" or "lvl" not in b:
+                            cur["lvl"] = max(tb[-1]["lvl"] - 1, 1); break
+                        bpn, bx = p_pos[id(b)]
+                        if bpn == pn and abs(bx - ln["x0"]) <= 6:
+                            cur["lvl"] = b["lvl"]; break
             elif last_step is not None and tb and last_step in tb:
                 same = step_pos[0] == pn
                 cur["lvl"] = last_step["lvl"] + (1 if (not same or ln["x0"] > step_pos[1] + 5) else 0)
             target().append(cur)
+            p_pos[id(cur)] = (pn, ln["x0"])
             new_page = False
 
     # normalise tables: map cells to column indices by x position
@@ -227,6 +252,12 @@ def parse_procedures(pdf):
                     r[i] = (r[i] + " " + t).strip()
                 rows.append(r)
             b["rows"] = rows
+    for sec_id, wrong, right in ERRATA:
+        sec = next(s for s in sections if s["id"] == sec_id)
+        hits = [b for b in sec["blocks"] if wrong in b.get("text", "")]
+        if len(hits) != 1:
+            sys.exit("erratum not found exactly once in %s: %r" % (sec_id, wrong))
+        hits[0]["text"] = hits[0]["text"].replace(wrong, right)
     for s in sections:
         fix_tables(s["blocks"])
     for c in chapters.values():
