@@ -148,6 +148,16 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   }
   ok(bad.length === 0, 'All ' + ids.length + ' sections render content' + (bad.length ? ' (empty: ' + bad + ')' : ''));
 
+  // Remarks per test: saved, shown under the title in the list, cleared by New job
+  await pg.goto(URL + '#/1.4');
+  await pg.waitForSelector('#remText');
+  await pg.fill('#remText', 'GOOD light slow');
+  ok(await pg.evaluate(() => JSON.parse(localStorage.getItem('fcp-v1')).rem['1.4'] === 'GOOD light slow'), 'Remark saved');
+  await pg.goto(URL + '#/1.5'); await pg.waitForTimeout(100);
+  ok((await pg.inputValue('#remText')) === '', 'Other test has empty remark');
+  await pg.goto(URL + '#/'); await pg.waitForTimeout(100);
+  ok((await pg.textContent('#row-1\\.4')).includes('GOOD light slow'), 'Remark shown in list');
+
   // PDF button opens the original pages for the test
   await pg.goto(URL + '#/2.16');
   await pg.waitForSelector('#pdfBtn');
@@ -171,6 +181,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++;
   await pg.click('#fAll');
   await pg.click('#row-1\\.4 .go');
   await pg.waitForFunction(() => location.hash === '#/1.4');
+  await pg.waitForTimeout(150);
   ok(await pg.isVisible('#home') && await pg.isVisible('#doc') && (await pg.textContent('#doc h1')).includes('BATTERY'), 'Split: tapping a test opens it on the right, list stays');
   ok(await pg.$eval('#row-1\\.4', e => e.classList.contains('cur')), 'Split: current test highlighted in list');
   ok(!(await pg.isVisible('#backBtn')), 'Split: no back button');
