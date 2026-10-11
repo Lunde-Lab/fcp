@@ -231,6 +231,9 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
 .job-f button { min-width: 120px; }
 .newjob { min-height: 46px; padding: 8px 16px; flex: none; }
 #barHome { justify-content: space-between; }
+.themebtn { width: 46px; min-height: 46px; padding: 0; margin-left: auto; flex: none; display: grid; place-items: center; color: var(--muted); }
+.themebtn svg { width: 22px; height: 22px; }
+.ver { margin: 0; font-family: var(--font-data); font-size: .8rem; color: var(--muted); }
 @media (max-width: 560px) { #barHome .seg button { padding-inline: 10px; } }
 .rows.nochk .go { padding-left: 16px; }
 /* Originalside fra PDF */
@@ -269,6 +272,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       <button type="button" id="fSel" aria-pressed="false">Job</button>
       <button type="button" id="fAll" aria-pressed="true">Add tests</button>
     </div>
+    <button type="button" class="themebtn" id="themeBtn" aria-label="Dark mode"></button>
     <button type="button" class="primary newjob" id="newJobBtn">New job</button>
   </div>
   <div class="bar-in" id="barSec" hidden>
@@ -289,9 +293,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       </div>
       <div id="chapters" class="wrap"></div>
       <div class="foot">
-        <div class="btns">
-          <button type="button" id="themeBtn">Light mode</button>
-        </div>
+        <p class="ver" id="appVer"></p>
       </div>
     </div>
   </section>
@@ -785,13 +787,20 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
     toast("New job – " + Object.keys(pick).length + " tests");
   });
 
+  // ---------- app version (set by scripts/bump-sw.sh on each release) ----------
+  var APP_VER = "1.1", APP_DATE = "11 Oct 2026";
+  $("appVer").textContent = "v" + APP_VER + " · " + APP_DATE;
+
   // ---------- theme (som ground-run) ----------
   var themeBtn = $("themeBtn");
   function isDark() {
     var t = document.documentElement.getAttribute("data-theme");
     return t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
-  function themeLabel() { themeBtn.textContent = isDark() ? "Light mode" : "Dark mode"; }
+  var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+  var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>';
+  // icon shows the mode a tap switches to
+  function themeLabel() { var d = isDark(); themeBtn.innerHTML = d ? SUN : MOON; themeBtn.setAttribute("aria-label", d ? "Light mode" : "Dark mode"); }
   var th = lsGet(THEMEKEY); if (th === "light" || th === "dark") document.documentElement.setAttribute("data-theme", th);
   themeLabel();
   themeBtn.addEventListener("click", function () {

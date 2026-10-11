@@ -18,6 +18,8 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 - Segmented control **Job (n) | Add tests** (internally `filterSel` / `fSel`=Job, `fAll`=Add tests; stored in `fcp-filter` as `sel`/`all`); with Selected active, prev/next steps through selected tests only.
 - Pilot tags: **Pilots Required** (amber, `pilots: "required"`) and **Pilot Recommended** (teal, `pilots: "recommended"`), via `pilotsTag()` – after the title in the list and the New job modal, under the heading on the procedure page.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
+- **Theme**: sun/moon icon button in the front-page top bar (between the segmented control and New job); the icon shows the mode a tap switches to. Stored in `fcp-theme`.
+- **Version**: `v1.N · d Mon YYYY` at the bottom of the front page (`APP_VER`/`APP_DATE` in `index.html`), set automatically by `scripts/bump-sw.sh` (N +1 and today's date on each release).
 - **New job** (top bar): modal listing all tests with per-chapter Select all and collapsible chapters (1.0 collapsed when the modal opens); **Start job** clears the previous job (selections, sign-offs, records), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
 - **Remarks** per test: free-text card on the procedure page (saved on input in `S.rem[id]`), shown in italics under the title in the list. New job clears them.
 - **PDF button** (top of each test, "PDF · 1-59"): full-screen view of the original PDF pages for that test (`pages/pNNN.png`, from the test's first page to the page where the next test starts). Pages are cached by the service worker in a separate cache `fcp-pages-1` (survives releases; bump it if the PDF changes), downloaded in the background after the page asks with `postMessage("cache-pages")`.
@@ -45,7 +47,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 | `data/fcp.json` | Parsed content (readable copy of what is inlined). Sections have `pages: [first, last]`; `pageLabels` = printed page number per PDF page. |
 | `pages/pNNN.png` | Original PDF pages 1–114 (150 dpi, 16 colours) for the PDF button. Rendered by `extract.py` (`--no-pages` to skip). |
 | `SA_S92A-FCP.pdf` | Source document. |
-| `sw.js`, `manifest.webmanifest`, `icons/` | Offline/PWA. Bump `VERSION` in `sw.js` on each release: `scripts/bump-sw.sh` |
+| `sw.js`, `manifest.webmanifest`, `icons/` | Offline/PWA. Run `scripts/bump-sw.sh` on each release: bumps `VERSION` in `sw.js` and the app version/date in `index.html` |
 | `tests/smoke.js` | Playwright smoke test. |
 
 ## Data format (`data/fcp.json`)
