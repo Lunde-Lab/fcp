@@ -216,8 +216,8 @@ button.off, button.primary.off { background: var(--panel2); border-color: var(--
 .job-h p.warnline { color: var(--warn); font-weight: 600; }
 .job-list { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
 .job-ch { display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 16px; background: var(--panel2); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 1; }
-.job-ch b { flex: 1; font-size: .95rem; }
-.job-ch b span { font-family: var(--font-data); color: var(--accent); margin-right: 8px; }
+.job-ch .chap-tog { flex: 1; min-width: 0; min-height: 44px; padding: 4px 0; border: 0; border-radius: 0; background: transparent; display: flex; align-items: center; gap: 10px; text-align: left; font-size: .95rem; font-weight: 700; }
+.job-ch .cnt { font-family: var(--font-data); font-size: .85rem; color: var(--muted); white-space: nowrap; }
 .job-ch button { min-height: 40px; padding: 4px 12px; font-size: .85rem; }
 .jrow { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 4px 12px 4px 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; text-align: left; }
 .jrow i { flex: none; width: 28px; height: 28px; border-radius: 8px; border: 2px solid var(--grid-strong); display: grid; place-items: center; }
@@ -367,6 +367,14 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
   // Kapitler som er lukket. 3.0 og 4.0 er lukket som standard.
   var COL = (function () { try { var o = JSON.parse(lsGet(COLKEY)); if (o && typeof o === "object") return o; } catch (e) {} return { "3": true, "4": true }; })();
   function saveCol() { lsSet(COLKEY, JSON.stringify(COL)); }
+  // Add tests view: 1.0 starts collapsed every time the view is opened (not stored; Job view uses COL)
+  var all1Open = false;
+  function isClosed(ch) { return !filterSel && ch === "1" ? !all1Open : !!COL[ch]; }
+  function openChap(ch) {
+    if (!filterSel && ch === "1") { all1Open = true; return false; }
+    if (!COL[ch]) return false;
+    delete COL[ch]; saveCol(); return true;
+  }
 
   // ---------- helpers ----------
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -409,7 +417,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       var nSel = c.items.filter(function (it) { return S.sel[it.id]; }).length;
       var nDone = c.items.filter(function (it) { return S.sel[it.id] && S.done[it.id]; }).length;
       var all = nSel === c.items.length;
-      var closed = !!COL[c.id];
+      var closed = isClosed(c.id);
       html += '<section class="card chap' + (closed ? " closed" : "") + '"><div class="chap-h"><h3><button type="button" class="chap-tog" data-tog="' + c.id + '" aria-expanded="' + !closed + '">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
         '<span>' + c.id + '.0</span>' + esc(c.title) + '</button></h3>' +
@@ -447,14 +455,16 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       c.items.forEach(function (it) { if (all) { if (!S.done[it.id]) delete S.sel[it.id]; } else S.sel[it.id] = true; });
       save(); renderHome();
     } else if (b.dataset.tog) {
-      if (COL[b.dataset.tog]) delete COL[b.dataset.tog]; else COL[b.dataset.tog] = true;
-      saveCol(); renderHome();
+      var ch = b.dataset.tog;
+      if (!filterSel && ch === "1") all1Open = !all1Open;
+      else { if (COL[ch]) delete COL[ch]; else COL[ch] = true; saveCol(); }
+      renderHome();
     } else if (b.dataset.sign) {
       openSign(b.dataset.sign);
     }
   });
 
-  function setFilter(v) { filterSel = v; lsSet(FILTKEY, v ? "sel" : "all"); renderHome(); if (isSplit()) $("home").scrollTop = 0; else window.scrollTo(0, 0); }
+  function setFilter(v) { filterSel = v; if (!v) all1Open = false; lsSet(FILTKEY, v ? "sel" : "all"); renderHome(); if (isSplit()) $("home").scrollTop = 0; else window.scrollTo(0, 0); }
   $("fAll").addEventListener("click", function () { setFilter(false); });
   $("fSel").addEventListener("click", function () { setFilter(true); });
 
@@ -661,7 +671,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
     document.body.classList.add("split");
     $("home").hidden = false; $("barHome").hidden = false; $("sec").hidden = false;
     $("barSec").hidden = !id; $("secBody").hidden = !id; $("secEmpty").hidden = !!id;
-    if (id && COL[SEC[id].chapter]) { delete COL[SEC[id].chapter]; saveCol(); }
+    if (id) openChap(SEC[id].chapter);
     cur = id; if (id) lastSec = id;
     renderHome();
     if (id) {
@@ -696,7 +706,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
       $("home").hidden = false; $("barHome").hidden = false;
       renderHome();
       document.title = "S-92 FCP";
-      if (lastSec && COL[SEC[lastSec].chapter]) { delete COL[SEC[lastSec].chapter]; saveCol(); renderHome(); }
+      if (lastSec && isClosed(SEC[lastSec].chapter)) { openChap(SEC[lastSec].chapter); renderHome(); }
       var row = lastSec && $("row-" + lastSec);
       if (row) {
         var r = row.getBoundingClientRect(), top = r.top + window.scrollY;
@@ -724,21 +734,25 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
 
   // ---------- footer actions ----------
   // New job: pick the tests in a modal; Start clears the old job and shows only the chosen tests
-  var pick = {};
+  var pick = {}, jcol = {};
   function renderJob() {
     $("jobList").innerHTML = D.index.map(function (c) {
-      var all = c.items.every(function (it) { return pick[it.id]; });
-      return '<div class="job-ch"><b><span>' + c.id + '.0</span>' + esc(c.title) + '</b><button type="button" data-jchap="' + c.id + '">' + (all ? "Clear" : "Select all") + '</button></div>' +
-        c.items.map(function (it) {
+      var all = c.items.every(function (it) { return pick[it.id]; }), closed = !!jcol[c.id];
+      var n = c.items.filter(function (it) { return pick[it.id]; }).length;
+      return '<div class="job-ch"><button type="button" class="chap-tog" data-jtog="' + c.id + '" aria-expanded="' + !closed + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
+        '<span>' + c.id + '.0</span>' + esc(c.title) + '</button>' + (n ? '<span class="cnt">' + n + '</span>' : "") +
+        '<button type="button" data-jchap="' + c.id + '">' + (all ? "Clear" : "Select all") + '</button></div>' +
+        (closed ? "" : c.items.map(function (it) {
           return '<button type="button" class="jrow" role="checkbox" aria-checked="' + !!pick[it.id] + '" data-jid="' + it.id + '"><i>' + CHECK + '</i><span class="n">' + it.id + '</span><span class="t">' + esc(it.title) + pilotsTag(it) + '</span></button>';
-        }).join("");
+        }).join(""));
     }).join("");
     var n = Object.keys(pick).length;
     $("jobCnt").textContent = n + " selected";
     $("jobStart").disabled = !n;
   }
   function openJob() {
-    pick = {};
+    pick = {}; jcol = { "1": true };
     var nDone = Object.keys(S.done).length;
     $("jobInfo").textContent = nDone ? "Starting a new job clears the current job (" + nDone + " sign-off" + (nDone > 1 ? "s" : "") + ")." : "Tick the tests to perform on this job.";
     $("jobInfo").className = nDone ? "warnline" : "";
@@ -750,7 +764,8 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
   $("jobList").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     var top = $("jobList").scrollTop;
-    if (b.dataset.jid) { if (pick[b.dataset.jid]) delete pick[b.dataset.jid]; else pick[b.dataset.jid] = true; }
+    if (b.dataset.jtog) { if (jcol[b.dataset.jtog]) delete jcol[b.dataset.jtog]; else jcol[b.dataset.jtog] = true; }
+    else if (b.dataset.jid) { if (pick[b.dataset.jid]) delete pick[b.dataset.jid]; else pick[b.dataset.jid] = true; }
     else if (b.dataset.jchap) {
       var c = CHAP[b.dataset.jchap], all = c.items.every(function (it) { return pick[it.id]; });
       c.items.forEach(function (it) { if (all) delete pick[it.id]; else pick[it.id] = true; });
