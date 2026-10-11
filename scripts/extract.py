@@ -36,6 +36,10 @@ LOOSE_RE = [(2, re.compile(r"^([a-z])\s+([A-Z][a-z]+\b.*)$")), (1, re.compile(r"
 VULGAR = {"1⁄2": "½", "1⁄4": "¼", "3⁄4": "¾"}
 # Known typos in the PDF, corrected on request (André): (section, wrong, right)
 ERRATA = [("4.1", "agreement with the PDFs.", "agreement with the PFDs.")]
+# Pilot tags (from André, not in the PDF): "required" -> "Pilots Required", "recommended" -> "Pilot Recommended"
+PILOTS = {"2.3", "2.11", "2.26", "5.10", "5.11"}
+PILOT_CHAPTERS = {"3", "4"}
+PILOTS_RECOMMENDED = {"2.27"}
 LIGATURES = {"\ufb00": "ff", "\ufb01": "fi", "\ufb02": "fl", "\ufb03": "ffi", "\ufb04": "ffl"}
 
 
@@ -279,6 +283,10 @@ def parse_index():
         m = re.match(r"^(\d\.\d+)\s+(.+?)\s*(_{2,})?$", line)
         if m and cur is not None:
             last = {"id": m.group(1), "title": m.group(2).strip(), "sign": bool(m.group(3))}
+            if last["id"] in PILOTS or cur["id"] in PILOT_CHAPTERS:
+                last["pilots"] = "required"
+            elif last["id"] in PILOTS_RECOMMENDED:
+                last["pilots"] = "recommended"
             cur["items"].append(last); continue
         if last is not None and last["id"] == "4.2" and re.match(r"^[A-Z][A-Z0-9 %]+$", line):
             last.setdefault("fields", []).append(line)
