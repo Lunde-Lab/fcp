@@ -741,20 +741,20 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
     $("jobList").innerHTML = D.index.map(function (c) {
       var all = c.items.every(function (it) { return pick[it.id]; }), closed = !!jcol[c.id];
       var n = c.items.filter(function (it) { return pick[it.id]; }).length;
-      return '<div class="job-ch"><button type="button" class="chap-tog" data-jtog="' + c.id + '" aria-expanded="' + !closed + '">' +
+      return '<div class="job-sec"><div class="job-ch"><button type="button" class="chap-tog" data-jtog="' + c.id + '" aria-expanded="' + !closed + '">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
         '<span>' + c.id + '.0</span>' + esc(c.title) + '</button>' + (n ? '<span class="cnt">' + n + '</span>' : "") +
         '<button type="button" data-jchap="' + c.id + '">' + (all ? "Clear" : "Select all") + '</button></div>' +
         (closed ? "" : c.items.map(function (it) {
           return '<button type="button" class="jrow" role="checkbox" aria-checked="' + !!pick[it.id] + '" data-jid="' + it.id + '"><i>' + CHECK + '</i><span class="n">' + it.id + '</span><span class="t">' + esc(it.title) + pilotsTag(it) + '</span></button>';
-        }).join(""));
+        }).join("")) + '</div>';
     }).join("");
     var n = Object.keys(pick).length;
     $("jobCnt").textContent = n + " selected";
     $("jobStart").disabled = !n;
   }
   function openJob() {
-    pick = {}; jcol = { "1": true };
+    pick = {}; jcol = { "1": true, "3": true, "4": true };
     var nDone = Object.keys(S.done).length;
     $("jobInfo").textContent = nDone ? "Starting a new job clears the current job (" + nDone + " sign-off" + (nDone > 1 ? "s" : "") + ")." : "Tick the tests to perform on this job.";
     $("jobInfo").className = nDone ? "warnline" : "";
@@ -788,7 +788,7 @@ body.split .row.cur { background: rgba(var(--accent-rgb), .14); box-shadow: inse
   });
 
   // ---------- app version (set by scripts/bump-sw.sh on each release) ----------
-  var APP_VER = "1.1", APP_DATE = "11 Oct 2026";
+  var APP_VER = "1.2", APP_DATE = "11 Oct 2026";
   $("appVer").textContent = "v" + APP_VER + " · " + APP_DATE;
 
   // ---------- theme (som ground-run) ----------
