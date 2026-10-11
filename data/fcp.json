@@ -247,7 +247,7 @@
      "id": "2.3",
      "title": "ENGINE CROSSBLEED START",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "2.4",
@@ -288,7 +288,7 @@
      "id": "2.11",
      "title": "ENGINE BREAK-IN",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "2.12",
@@ -364,12 +364,13 @@
      "id": "2.26",
      "title": "GROUND ENGINE POWER ASSURANCE CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "2.27",
      "title": "FADEC TRAINING MODE",
-     "sign": true
+     "sign": true,
+     "pilots": "recommended"
     },
     {
      "id": "2.28",
@@ -396,37 +397,37 @@
      "id": "3.1",
      "title": "FLIGHT MAIN ROTOR TRACK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "3.2",
      "title": "WEIGHT ON WHEELS CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "3.3",
      "title": "INITIAL HOVER CHECKS",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "3.4",
      "title": "HOVER CONTROL POSITION CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "3.5",
      "title": "COMPASS AND HSI CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "3.6",
      "title": "AFCS HOVER CHECKS",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     }
    ]
   },
@@ -438,13 +439,13 @@
      "id": "4.1",
      "title": "FLIGHT INSTRUMENTS",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "4.2",
      "title": "AUTOROTATION",
      "sign": true,
-     "pilots": true,
+     "pilots": "required",
      "fields": [
       "COLLECTIVE SETTING 10%",
       "COLLECTIVE SETTING 15%",
@@ -462,31 +463,31 @@
      "id": "4.3",
      "title": "LANDING GEAR CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "4.4",
      "title": "FLIGHT ENGINE POWER ASSURANCE CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "4.5",
      "title": "AFCS FLIGHT CHECKS",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "4.6",
      "title": "ENHANCED GROUND PROXIMITY WARNING SYSTEM",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "4.7",
      "title": "VH CHECK",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     }
    ]
   },
@@ -543,13 +544,13 @@
      "id": "5.10",
      "title": "SAR AFCS",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     },
     {
      "id": "5.11",
      "title": "RIG APPROACH",
      "sign": true,
-     "pilots": true
+     "pilots": "required"
     }
    ]
   }
