@@ -32,6 +32,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 
 - No selected/performed/remaining counter card on the front page (removed on request).
 - No export/Share summary (removed on request).
+- No toasts (pop-up messages after sign off, "added to job", new job – removed on request).
 - No technician/initials – the button is **Sign off** (one tap), done state **✓ Performed** + time (not "Signed off"/"SAT"). Signed-off tasks are struck through and the whole row has reduced opacity.
 - Sign off only once on the procedure page: in the top bar (no second button at the bottom).
 - **All** view is only for picking tests: checkboxes, no Sign off buttons/status (signed-off rows are still struck through). **Selected** view has no checkboxes (deselect only from All); Sign off lives there and in the procedure page top bar.
