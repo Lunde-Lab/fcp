@@ -16,6 +16,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 - Chapters collapse by tapping the header; **3.0 and 4.0 are collapsed by default**. Returning from a procedure opens its chapter.
 - **Procedure page**: sticky top bar with **FCP** back button (always visible), prev/next and **Sign off** – the only Sign off on the page (always reachable). Bottom: Remarks, prev/next. No selected toggle: if the test is not in the job, Sign off is greyed out and tapping it asks "Add it to the job?" (adds only; tap Sign off again).
 - Segmented control **Job (n) | Add tests** (internally `filterSel` / `fSel`=Job, `fAll`=Add tests; stored in `fcp-filter` as `sel`/`all`); with Selected active, prev/next steps through selected tests only.
+- **Pilots Required** tag (amber) after the title in the list and under the heading on the procedure page, for items with `pilots: true`.
 - 4.2 AUTOROTATION has the record fields from the checklist (collective settings, HP, OAT …) and Figures 1–4 (PDF pages 115–118).
 - **New job** (top bar): modal listing all tests with per-chapter Select all; **Start job** clears the previous job (selections, sign-offs, records), selects the picked tests and switches to the **Selected** filter. To add more tests later, switch to **All** and tick them.
 - **Remarks** per test: free-text card on the procedure page (saved on input in `S.rem[id]`), shown in italics under the title in the list. New job clears them.
@@ -49,7 +50,7 @@ Single-page web app of the **S-92A Flight Check Procedures checklist** (`SA_S92A
 
 ## Data format (`data/fcp.json`)
 
-`index` = front page chapters/items (`sign: false` for 2.9, which has no sign line in the PDF; 4.2 has `fields`). `sections[]` = `{id, chapter, title, page, blocks[]}`, blocks:
+`index` = front page chapters/items (`sign: false` for 2.9, which has no sign line in the PDF; 4.2 has `fields`; `pilots: true` on tests that need pilots – set by `PILOTS`/`PILOT_CHAPTERS` in `extract.py`, list from André: 2.3, 2.11, 2.26, all 3.x and 4.x, 5.10, 5.11). `sections[]` = `{id, chapter, title, page, blocks[]}`, blocks:
 `step {lvl 1–3, n, text}` · `warning|caution|note {text}` · `h {id, text}` (sub-headings like 2.16.1) · `p {text, lvl}` · `table {rows}`.
 Parser notes: the PDF draws `±` and `″` with pi fonts (mapped in `FONT_MAP`); fractions are small digits around `⁄` (→ `½ ¼ ¾`, `VULGAR`); some steps lack the dot after the label (`LOOSE_RE`); nested list items (2.25) get `lvl` from their indent; header/footer are cut by y-position. `chapters` holds text before a chapter's first test (the two 1.0 WARNINGs) – shown at the top of 1.1. `ERRATA` = PDF typos André has asked to correct (4.1 `PDFs` → `PFDs`); the only allowed deviations from the PDF text. After changing the parser, check that no words are lost (compare word counts against `pdftotext`) and look at screenshots.
 

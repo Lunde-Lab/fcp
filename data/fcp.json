@@ -246,7 +246,8 @@
     {
      "id": "2.3",
      "title": "ENGINE CROSSBLEED START",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "2.4",
@@ -286,7 +287,8 @@
     {
      "id": "2.11",
      "title": "ENGINE BREAK-IN",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "2.12",
@@ -361,7 +363,8 @@
     {
      "id": "2.26",
      "title": "GROUND ENGINE POWER ASSURANCE CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "2.27",
@@ -392,32 +395,38 @@
     {
      "id": "3.1",
      "title": "FLIGHT MAIN ROTOR TRACK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "3.2",
      "title": "WEIGHT ON WHEELS CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "3.3",
      "title": "INITIAL HOVER CHECKS",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "3.4",
      "title": "HOVER CONTROL POSITION CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "3.5",
      "title": "COMPASS AND HSI CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "3.6",
      "title": "AFCS HOVER CHECKS",
-     "sign": true
+     "sign": true,
+     "pilots": true
     }
    ]
   },
@@ -428,12 +437,14 @@
     {
      "id": "4.1",
      "title": "FLIGHT INSTRUMENTS",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "4.2",
      "title": "AUTOROTATION",
      "sign": true,
+     "pilots": true,
      "fields": [
       "COLLECTIVE SETTING 10%",
       "COLLECTIVE SETTING 15%",
@@ -450,27 +461,32 @@
     {
      "id": "4.3",
      "title": "LANDING GEAR CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "4.4",
      "title": "FLIGHT ENGINE POWER ASSURANCE CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "4.5",
      "title": "AFCS FLIGHT CHECKS",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "4.6",
      "title": "ENHANCED GROUND PROXIMITY WARNING SYSTEM",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "4.7",
      "title": "VH CHECK",
-     "sign": true
+     "sign": true,
+     "pilots": true
     }
    ]
   },
@@ -526,12 +542,14 @@
     {
      "id": "5.10",
      "title": "SAR AFCS",
-     "sign": true
+     "sign": true,
+     "pilots": true
     },
     {
      "id": "5.11",
      "title": "RIG APPROACH",
-     "sign": true
+     "sign": true,
+     "pilots": true
     }
    ]
   }
